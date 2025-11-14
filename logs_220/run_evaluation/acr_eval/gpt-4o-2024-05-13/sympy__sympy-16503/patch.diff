@@ -1,0 +1,17 @@
+diff --git a/sympy/printing/pretty/pretty.py b/sympy/printing/pretty/pretty.py
+index 7a3de33522..78e6c32af2 100644
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -631,6 +631,12 @@ def adjust(s, wid=None, how='<^>'):
+ 
+         prettyF.baseline = max_upper + sign_height//2
+         prettyF.binding = prettyForm.MUL
++
++        # Adjust the alignment of additional terms
++        if expr.is_Add:
++            terms = [self._print(arg) for arg in expr.args]
++            prettyF = prettyForm(*prettyForm(*terms).right(prettyF))
++
+         return prettyF
+ 
+     def _print_Limit(self, l):

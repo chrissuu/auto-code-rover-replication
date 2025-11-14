@@ -1,0 +1,45 @@
+2025-11-13 06:17:44,943 - INFO - Creating container for sphinx-doc__sphinx-8721...
+2025-11-13 06:17:45,196 - INFO - Container for sphinx-doc__sphinx-8721 created: 8514cc8779a990b943d59f1bc500ea4d3092c88c239dd4fc8d8c8e29c2eca43e
+2025-11-13 06:17:45,347 - INFO - Container for sphinx-doc__sphinx-8721 started: 8514cc8779a990b943d59f1bc500ea4d3092c88c239dd4fc8d8c8e29c2eca43e
+2025-11-13 06:17:45,348 - INFO - Intermediate patch for sphinx-doc__sphinx-8721 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sphinx-doc__sphinx-8721/patch.diff, now applying to container...
+2025-11-13 06:17:45,476 - INFO - Failed to apply patch to container: git apply --verbose
+2025-11-13 06:17:45,543 - INFO - Failed to apply patch to container: git apply --verbose --reject
+2025-11-13 06:17:45,606 - INFO - >>>>> Applied Patch:
+patching file tests/test_ext_viewcode.py
+Hunk #1 succeeded at 61 with fuzz 3.
+
+2025-11-13 06:17:45,974 - INFO - Git diff before:
+diff --git a/tests/test_ext_viewcode.py b/tests/test_ext_viewcode.py
+index 79864095b..ff24d19cc 100644
+--- a/tests/test_ext_viewcode.py
++++ b/tests/test_ext_viewcode.py
+@@ -61,6 +61,15 @@ def test_linkcode(app, status, warning):
+     assert 'http://foobar/cpp/' in stuff
+ 
+ 
++@pytest.mark.sphinx('epub', testroot='ext-viewcode',
++                    confoverrides={'viewcode_enable_epub': False})
++def test_viewcode_epub_disabled(app, status, warning):
++    app.builder.build_all()
++    # Verify that viewcode pages are not created for epub
++    # This can be done by checking the output files or the status/warning messages
++    assert 'viewcode' not in status.getvalue()
++    assert 'viewcode' not in warning.getvalue()
++
+ @pytest.mark.sphinx(testroot='ext-viewcode-find')
+ def test_local_source_files(app, status, warning):
+     def find_source(app, modname):
+2025-11-13 06:17:45,975 - INFO - Eval script for sphinx-doc__sphinx-8721 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sphinx-doc__sphinx-8721/eval.sh; copying to container...
+2025-11-13 06:17:52,029 - INFO - Test runtime: 6.00 seconds
+2025-11-13 06:17:52,030 - INFO - Test output for sphinx-doc__sphinx-8721 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sphinx-doc__sphinx-8721/test_output.txt
+2025-11-13 06:17:52,085 - INFO - Git diff after:
+
+2025-11-13 06:17:52,085 - INFO - Git diff changed after running eval script
+2025-11-13 06:17:52,085 - INFO - Grading answer for sphinx-doc__sphinx-8721...
+2025-11-13 06:17:52,095 - INFO - report: {'sphinx-doc__sphinx-8721': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['tests/test_ext_viewcode.py::test_viewcode_epub_default']}, 'PASS_TO_PASS': {'success': ['tests/test_ext_viewcode.py::test_viewcode_epub_enabled', 'tests/test_ext_viewcode.py::test_linkcode', 'tests/test_ext_viewcode.py::test_local_source_files'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sphinx-doc__sphinx-8721: resolved: False
+2025-11-13 06:17:52,096 - INFO - Attempting to stop container sweb.eval.sphinx-doc__sphinx-8721.acr_eval...
+2025-11-13 06:18:29,493 - INFO - Attempting to remove container sweb.eval.sphinx-doc__sphinx-8721.acr_eval...
+2025-11-13 06:18:29,731 - INFO - Container sweb.eval.sphinx-doc__sphinx-8721.acr_eval removed.
+2025-11-13 06:18:29,731 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8721:latest...
+2025-11-13 06:18:30,530 - INFO - Image swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8721:latest removed.

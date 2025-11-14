@@ -1,0 +1,22 @@
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index d610dc86f0..d5f0577939 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -1010,6 +1010,8 @@ class CharField(Field):
+     def to_python(self, value):
+         if isinstance(value, str) or value is None:
+             return value
++        if isinstance(value, enum.Enum):
++            return value.value
+         return str(value)
+ 
+     def get_prep_value(self, value):
+@@ -1769,6 +1771,8 @@ class IntegerField(Field):
+     def to_python(self, value):
+         if value is None:
+             return value
++        if isinstance(value, enum.Enum):
++            return value.value
+         try:
+             return int(value)
+         except (TypeError, ValueError):

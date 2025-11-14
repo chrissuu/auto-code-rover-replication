@@ -1,0 +1,24 @@
+diff --git a/sympy/physics/units/util.py b/sympy/physics/units/util.py
+index b03ed4cd88..d817f85919 100644
+--- a/sympy/physics/units/util.py
++++ b/sympy/physics/units/util.py
+@@ -31,7 +31,7 @@ def _get_conversion_matrix_for_expr(expr, target_units, unit_system):
+     exprmat = Matrix([dim_dependencies.get(k, 0) for k in canon_dim_units])
+ 
+     res_exponents = camat.solve_least_squares(exprmat, method=None)
+-    return res_exponents
++    return res_exponents if res_exponents.is_integer else None
+ 
+ 
+ def convert_to(expr, target_units, unit_system="SI"):
+@@ -105,6 +105,10 @@ def get_total_scale_factor(expr):
+     if depmat is None:
+         return expr
+ 
++    if any(not isinstance(exp, Rational) or exp.q != 1 for exp in depmat):
++        # If the exponents are not integers, it indicates orthogonal units
++        return expr
++
+     expr_scale_factor = get_total_scale_factor(expr)
+     return expr_scale_factor * Mul.fromiter((1/get_total_scale_factor(u) * u) ** p for u, p in zip(target_units, depmat))
+ 

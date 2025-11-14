@@ -1,0 +1,28 @@
+diff --git a/django/db/models/query.py b/django/db/models/query.py
+index 180f4a41fc..9a52b1b78b 100644
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -802,6 +802,11 @@ class QuerySet:
+             clone = clone.annotate(**expressions)
+         clone._fields = fields
+         clone.query.set_values(fields)
++        
++        # Ensure the GROUP BY clause is correctly maintained
++        if self.query.group_by is not None:
++            clone.query.group_by = self.query.group_by[:]
++        
+         return clone
+ 
+     def values(self, *fields, **expressions):
+@@ -921,6 +926,11 @@ class QuerySet:
+             clone.query.add_q(~Q(*args, **kwargs))
+         else:
+             clone.query.add_q(Q(*args, **kwargs))
++        
++        # Ensure the GROUP BY clause is correctly maintained
++        if self.query.group_by is not None:
++            clone.query.group_by = self.query.group_by[:]
++        
+         return clone
+ 
+     def complex_filter(self, filter_obj):

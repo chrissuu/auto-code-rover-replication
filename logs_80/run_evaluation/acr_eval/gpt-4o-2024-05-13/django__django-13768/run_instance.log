@@ -1,0 +1,181 @@
+2025-11-13 01:34:58,445 - INFO - Creating container for django__django-13768...
+2025-11-13 01:35:00,401 - INFO - Container for django__django-13768 created: bb4fa453ad23a33760d2aa5958d7056b7cbe8e5e3fbdd21e547b18743ed05c18
+2025-11-13 01:35:00,552 - INFO - Container for django__django-13768 started: bb4fa453ad23a33760d2aa5958d7056b7cbe8e5e3fbdd21e547b18743ed05c18
+2025-11-13 01:35:00,552 - INFO - Intermediate patch for django__django-13768 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-13768/patch.diff, now applying to container...
+2025-11-13 01:35:00,669 - INFO - >>>>> Applied Patch:
+Checking patch django/dispatch/dispatcher.py...
+Applied patch django/dispatch/dispatcher.py cleanly.
+
+2025-11-13 01:35:01,520 - INFO - Git diff before:
+diff --git a/django/dispatch/dispatcher.py b/django/dispatch/dispatcher.py
+index b7d9d26389..7b87df9a82 100644
+--- a/django/dispatch/dispatcher.py
++++ b/django/dispatch/dispatcher.py
+@@ -179,39 +179,48 @@ class Signal:
+             for receiver in self._live_receivers(sender)
+         ]
+ 
+-    def send_robust(self, sender, **named):
+-        """
+-        Send signal from sender to all connected receivers catching errors.
++    import logging
+ 
+-        Arguments:
++    # Configure logger for this module
++    logger = logging.getLogger(__name__)
+ 
+-            sender
+-                The sender of the signal. Can be any Python object (normally one
+-                registered with a connect if you actually want something to
+-                occur).
++    class Signal:
++        # Existing code...
+ 
+-            named
+-                Named arguments which will be passed to receivers.
++        def send_robust(self, sender, **named):
++            """
++            Send signal from sender to all connected receivers catching errors.
+ 
+-        Return a list of tuple pairs [(receiver, response), ... ].
++            Arguments:
+ 
+-        If any receiver raises an error (specifically any subclass of
+-        Exception), return the error instance as the result for that receiver.
+-        """
+-        if not self.receivers or self.sender_receivers_cache.get(sender) is NO_RECEIVERS:
+-            return []
++                sender
++                    The sender of the signal. Can be any Python object (normally one
++                    registered with a connect if you actually want something to
++                    occur).
+ 
+-        # Call each receiver with whatever arguments it can accept.
+-        # Return a list of tuple pairs [(receiver, response), ... ].
+-        responses = []
+-        for receiver in self._live_receivers(sender):
+-            try:
+-                response = receiver(signal=self, sender=sender, **named)
+-            except Exception as err:
+-                responses.append((receiver, err))
+-            else:
+-                responses.append((receiver, response))
+-        return responses
++                named
++                    Named arguments which will be passed to receivers.
++
++            Return a list of tuple pairs [(receiver, response), ... ].
++
++            If any receiver raises an error (specifically any subclass of
++            Exception), return the error instance as the result for that receiver.
++            """
++            if not self.receivers or self.sender_receivers_cache.get(sender) is NO_RECEIVERS:
++                return []
++
++            # Call each receiver with whatever arguments it can accept.
++            # Return a list of tuple pairs [(receiver, response), ... ].
++            responses = []
++            for receiver in self._live_receivers(sender):
++                try:
++                    response = receiver(signal=self, sender=sender, **named)
++                except Exception as err:
++                    logger.exception('Error in receiver %s', receiver)
++                    responses.append((receiver, err))
++                else:
++                    responses.append((receiver, response))
++            return responses
+ 
+     def _clear_dead_receivers(self):
+         # Note: caller is assumed to hold self.lock.
+2025-11-13 01:35:01,521 - INFO - Eval script for django__django-13768 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-13768/eval.sh; copying to container...
+2025-11-13 01:35:11,140 - INFO - Test runtime: 9.57 seconds
+2025-11-13 01:35:11,141 - INFO - Test output for django__django-13768 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-13768/test_output.txt
+2025-11-13 01:35:11,207 - INFO - Git diff after:
+diff --git a/django/dispatch/dispatcher.py b/django/dispatch/dispatcher.py
+index b7d9d26389..7b87df9a82 100644
+--- a/django/dispatch/dispatcher.py
++++ b/django/dispatch/dispatcher.py
+@@ -179,39 +179,48 @@ class Signal:
+             for receiver in self._live_receivers(sender)
+         ]
+ 
+-    def send_robust(self, sender, **named):
+-        """
+-        Send signal from sender to all connected receivers catching errors.
++    import logging
+ 
+-        Arguments:
++    # Configure logger for this module
++    logger = logging.getLogger(__name__)
+ 
+-            sender
+-                The sender of the signal. Can be any Python object (normally one
+-                registered with a connect if you actually want something to
+-                occur).
++    class Signal:
++        # Existing code...
+ 
+-            named
+-                Named arguments which will be passed to receivers.
++        def send_robust(self, sender, **named):
++            """
++            Send signal from sender to all connected receivers catching errors.
+ 
+-        Return a list of tuple pairs [(receiver, response), ... ].
++            Arguments:
+ 
+-        If any receiver raises an error (specifically any subclass of
+-        Exception), return the error instance as the result for that receiver.
+-        """
+-        if not self.receivers or self.sender_receivers_cache.get(sender) is NO_RECEIVERS:
+-            return []
++                sender
++                    The sender of the signal. Can be any Python object (normally one
++                    registered with a connect if you actually want something to
++                    occur).
+ 
+-        # Call each receiver with whatever arguments it can accept.
+-        # Return a list of tuple pairs [(receiver, response), ... ].
+-        responses = []
+-        for receiver in self._live_receivers(sender):
+-            try:
+-                response = receiver(signal=self, sender=sender, **named)
+-            except Exception as err:
+-                responses.append((receiver, err))
+-            else:
+-                responses.append((receiver, response))
+-        return responses
++                named
++                    Named arguments which will be passed to receivers.
++
++            Return a list of tuple pairs [(receiver, response), ... ].
++
++            If any receiver raises an error (specifically any subclass of
++            Exception), return the error instance as the result for that receiver.
++            """
++            if not self.receivers or self.sender_receivers_cache.get(sender) is NO_RECEIVERS:
++                return []
++
++            # Call each receiver with whatever arguments it can accept.
++            # Return a list of tuple pairs [(receiver, response), ... ].
++            responses = []
++            for receiver in self._live_receivers(sender):
++                try:
++                    response = receiver(signal=self, sender=sender, **named)
++                except Exception as err:
++                    logger.exception('Error in receiver %s', receiver)
++                    responses.append((receiver, err))
++                else:
++                    responses.append((receiver, response))
++            return responses
+ 
+     def _clear_dead_receivers(self):
+         # Note: caller is assumed to hold self.lock.
+2025-11-13 01:35:11,207 - INFO - Grading answer for django__django-13768...
+2025-11-13 01:35:11,208 - INFO - report: {'django__django-13768': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_send_robust_fail (dispatch.tests.DispatcherTests)']}, 'PASS_TO_PASS': {'success': ['test_receiver_signal_list (dispatch.tests.ReceiverTestCase)', 'test_receiver_single_signal (dispatch.tests.ReceiverTestCase)', 'test_cached_garbaged_collected (dispatch.tests.DispatcherTests)', 'test_disconnection (dispatch.tests.DispatcherTests)', 'test_garbage_collected (dispatch.tests.DispatcherTests)', 'test_has_listeners (dispatch.tests.DispatcherTests)', 'test_multiple_registration (dispatch.tests.DispatcherTests)', 'test_send (dispatch.tests.DispatcherTests)', 'test_send_connected_no_sender (dispatch.tests.DispatcherTests)', 'test_send_different_no_sender (dispatch.tests.DispatcherTests)', 'test_send_no_receivers (dispatch.tests.DispatcherTests)'], 'failure': ['test_cannot_connect_no_kwargs (dispatch.tests.DispatcherTests)', 'test_cannot_connect_non_callable (dispatch.tests.DispatcherTests)', 'test_send_robust_ignored_sender (dispatch.tests.DispatcherTests)', 'test_send_robust_no_receivers (dispatch.tests.DispatcherTests)', 'test_send_robust_success (dispatch.tests.DispatcherTests)', 'test_uid_registration (dispatch.tests.DispatcherTests)', 'test_values_returned_by_disconnection (dispatch.tests.DispatcherTests)']}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-13768: resolved: False
+2025-11-13 01:35:11,208 - INFO - Attempting to stop container sweb.eval.django__django-13768.acr_eval...
+2025-11-13 01:35:38,257 - INFO - Attempting to remove container sweb.eval.django__django-13768.acr_eval...
+2025-11-13 01:35:38,297 - INFO - Container sweb.eval.django__django-13768.acr_eval removed.
+2025-11-13 01:35:38,297 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.django_1776_django-13768:latest...
+2025-11-13 01:35:39,180 - INFO - Image swebench/sweb.eval.x86_64.django_1776_django-13768:latest removed.

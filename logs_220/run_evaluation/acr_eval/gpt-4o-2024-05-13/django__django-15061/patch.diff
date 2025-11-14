@@ -1,0 +1,49 @@
+diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py
+index 5bbfcbe41c..3e00714dfe 100644
+--- a/django/forms/boundfield.py
++++ b/django/forms/boundfield.py
+@@ -167,7 +167,7 @@ class BoundField:
+         widget = self.field.widget
+         id_ = widget.attrs.get('id') or self.auto_id
+         if id_:
+-            id_for_label = widget.id_for_label(id_)
++            id_for_label = widget.id_for_label(id_) if hasattr(widget, 'id_for_label') else id_
+             if id_for_label:
+                 attrs = {**(attrs or {}), 'for': id_for_label}
+             if self.field.required and hasattr(self.form, 'required_css_class'):
+@@ -224,7 +224,9 @@ class BoundField:
+         """
+         widget = self.field.widget
+         id_ = widget.attrs.get('id') or self.auto_id
+-        return widget.id_for_label(id_)
++        if hasattr(widget, 'id_for_label'):
++            return widget.id_for_label(id_)
++        return id_
+ 
+     @cached_property
+     def initial(self):
+diff --git a/django/forms/widgets.py b/django/forms/widgets.py
+index 00c19e2c55..512d070d3e 100644
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -624,7 +624,7 @@ class ChoiceWidget(Widget):
+         if selected:
+             option_attrs.update(self.checked_attribute)
+         if 'id' in option_attrs:
+-            option_attrs['id'] = self.id_for_label(option_attrs['id'], index)
++            option_attrs['id'] = self.id_for_label(option_attrs['id'], index) if hasattr(self, 'id_for_label') else option_attrs['id']
+         return {
+             'name': name,
+             'value': value,
+@@ -848,10 +848,7 @@ class MultiWidget(Widget):
+         context['widget']['subwidgets'] = subwidgets
+         return context
+ 
+-    def id_for_label(self, id_):
+-        if id_:
+-            id_ += '_0'
+-        return id_
++    # Removed id_for_label method from MultiWidget class
+ 
+     def value_from_datadict(self, data, files, name):
+         return [

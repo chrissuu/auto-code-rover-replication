@@ -1,0 +1,51 @@
+2025-11-13 06:22:43,914 - INFO - Creating container for sympy__sympy-17655...
+2025-11-13 06:22:44,131 - INFO - Container for sympy__sympy-17655 created: fc5d8713c2a9f91cdd14753e751646c97ce11b8f9f336564b47b25cd9479b608
+2025-11-13 06:22:44,287 - INFO - Container for sympy__sympy-17655 started: fc5d8713c2a9f91cdd14753e751646c97ce11b8f9f336564b47b25cd9479b608
+2025-11-13 06:22:44,287 - INFO - Intermediate patch for sympy__sympy-17655 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-17655/patch.diff, now applying to container...
+2025-11-13 06:22:44,404 - INFO - >>>>> Applied Patch:
+Checking patch sympy/geometry/point.py...
+Applied patch sympy/geometry/point.py cleanly.
+
+2025-11-13 06:22:44,926 - INFO - Git diff before:
+diff --git a/sympy/geometry/point.py b/sympy/geometry/point.py
+index 7c978c47be..072d44118d 100644
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -214,6 +214,10 @@ def __add__(self, other):
+ 
+         """
+         try:
++            if isinstance(other, Mul):
++                scalar, point = other.as_coeff_Mul()
++                if isinstance(point, Point):
++                    other = Point([scalar * coord for coord in point.args], evaluate=False)
+             s, o = Point._normalize_dimension(self, Point(other, evaluate=False))
+         except TypeError:
+             raise GeometryError("Don't know how to add {} and a Point object".format(other))
+2025-11-13 06:22:44,927 - INFO - Eval script for sympy__sympy-17655 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-17655/eval.sh; copying to container...
+2025-11-13 06:22:50,658 - INFO - Test runtime: 5.67 seconds
+2025-11-13 06:22:50,658 - INFO - Test output for sympy__sympy-17655 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-17655/test_output.txt
+2025-11-13 06:22:50,724 - INFO - Git diff after:
+diff --git a/sympy/geometry/point.py b/sympy/geometry/point.py
+index 7c978c47be..072d44118d 100644
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -214,6 +214,10 @@ def __add__(self, other):
+ 
+         """
+         try:
++            if isinstance(other, Mul):
++                scalar, point = other.as_coeff_Mul()
++                if isinstance(point, Point):
++                    other = Point([scalar * coord for coord in point.args], evaluate=False)
+             s, o = Point._normalize_dimension(self, Point(other, evaluate=False))
+         except TypeError:
+             raise GeometryError("Don't know how to add {} and a Point object".format(other))
+2025-11-13 06:22:50,724 - INFO - Grading answer for sympy__sympy-17655...
+2025-11-13 06:22:50,726 - INFO - report: {'sympy__sympy-17655': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_point', 'test_point3D']}, 'PASS_TO_PASS': {'success': ['test_Point2D', 'test_issue_11617', 'test_transform', 'test_unit', 'test_dot', 'test__normalize_dimension'], 'failure': ['test_issue_9214', 'test_concyclic_doctest_bug', 'test_arguments']}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-17655: resolved: False
+2025-11-13 06:22:50,726 - INFO - Attempting to stop container sweb.eval.sympy__sympy-17655.acr_eval...
+2025-11-13 06:23:06,370 - INFO - Attempting to remove container sweb.eval.sympy__sympy-17655.acr_eval...
+2025-11-13 06:23:06,407 - INFO - Container sweb.eval.sympy__sympy-17655.acr_eval removed.
+2025-11-13 06:23:06,407 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-17655:latest...
+2025-11-13 06:23:06,502 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-17655:latest removed.

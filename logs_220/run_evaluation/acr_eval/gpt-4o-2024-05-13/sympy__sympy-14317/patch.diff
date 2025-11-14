@@ -1,0 +1,25 @@
+diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py
+index 737e16cc74..7546661f82 100644
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -1853,12 +1853,18 @@ def _print_PolynomialRingBase(self, expr):
+         return r"%s%s\left[%s\right]" % (inv, domain, symbols)
+ 
+     def _print_Poly(self, poly):
++        from sympy import prod
++
+         cls = poly.__class__.__name__
+-        expr = self._print(poly.as_expr())
+         gens = list(map(self._print, poly.gens))
+         domain = "domain=%s" % self._print(poly.get_domain())
+ 
+-        args = ", ".join([expr] + gens + [domain])
++        # Sort the terms in the expression by their degrees in descending order
++        terms = sorted(poly.terms(), key=lambda term: -sum(term[0]))
++        sorted_expr = sum(coeff * prod(gen**exp for gen, exp in zip(poly.gens, term))
++                          for term, coeff in terms)
++
++        args = ", ".join([self._print(sorted_expr)] + gens + [domain])
+         if cls in accepted_latex_functions:
+             tex = r"\%s {\left (%s \right )}" % (cls, args)
+         else:

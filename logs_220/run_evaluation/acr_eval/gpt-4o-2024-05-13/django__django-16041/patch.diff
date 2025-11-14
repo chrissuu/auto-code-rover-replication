@@ -1,0 +1,16 @@
+diff --git a/django/forms/models.py b/django/forms/models.py
+index 89cb000271..10d7d855a1 100644
+--- a/django/forms/models.py
++++ b/django/forms/models.py
+@@ -727,6 +727,11 @@ class BaseModelFormSet(BaseFormSet):
+                 kwargs["initial"] = self.initial_extra[i - self.initial_form_count()]
+             except IndexError:
+                 pass
++        
++        # Remove 'empty_permitted' from form_kwargs for empty_form
++        if 'empty_permitted' in kwargs:
++            del kwargs['empty_permitted']
++        
+         form = super()._construct_form(i, **kwargs)
+         if pk_required:
+             form.fields[self.model._meta.pk.name].required = True

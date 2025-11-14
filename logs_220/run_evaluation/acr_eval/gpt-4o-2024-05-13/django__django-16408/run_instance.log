@@ -1,0 +1,40 @@
+2025-11-13 05:37:50,841 - INFO - Creating container for django__django-16408...
+2025-11-13 05:38:13,427 - INFO - Container for django__django-16408 created: 039e3547165ab2ce9f132e033e26c9f13c2357d5775b1f0e4cfce3559c7caa08
+2025-11-13 05:38:13,622 - INFO - Container for django__django-16408 started: 039e3547165ab2ce9f132e033e26c9f13c2357d5775b1f0e4cfce3559c7caa08
+2025-11-13 05:38:13,622 - INFO - Intermediate patch for django__django-16408 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-16408/patch.diff, now applying to container...
+2025-11-13 05:38:13,744 - INFO - Failed to apply patch to container: git apply --verbose
+2025-11-13 05:38:13,816 - INFO - Failed to apply patch to container: git apply --verbose --reject
+2025-11-13 05:38:13,878 - INFO - >>>>> Applied Patch:
+patching file tests/known_related_objects/tests.py
+Hunk #1 succeeded at 164 with fuzz 3 (offset -10 lines).
+
+2025-11-13 05:38:14,719 - INFO - Git diff before:
+diff --git a/tests/known_related_objects/tests.py b/tests/known_related_objects/tests.py
+index 6080da3838..6faf96643f 100644
+--- a/tests/known_related_objects/tests.py
++++ b/tests/known_related_objects/tests.py
+@@ -164,3 +164,10 @@ class ExistingRelatedInstancesTests(TestCase):
+             )
+             self.assertIs(ps[0], ps[0].pool_1.poolstyle)
+             self.assertIs(ps[0], ps[0].pool_2.another_style)
++    def test_wrong_select_related(self):
++        with self.assertNumQueries(3):
++            p = list(PoolStyle.objects.annotate(
++                tournament_pool=FilteredRelation('pool__tournament__pool'),
++            ).select_related('tournament_pool'))
++        self.assertEqual(p[0].pool.tournament, p[0].tournament_pool.tournament)
++
+2025-11-13 05:38:14,719 - INFO - Eval script for django__django-16408 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-16408/eval.sh; copying to container...
+2025-11-13 05:38:21,566 - INFO - Test runtime: 6.80 seconds
+2025-11-13 05:38:21,567 - INFO - Test output for django__django-16408 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-16408/test_output.txt
+2025-11-13 05:38:21,630 - INFO - Git diff after:
+
+2025-11-13 05:38:21,630 - INFO - Git diff changed after running eval script
+2025-11-13 05:38:21,630 - INFO - Grading answer for django__django-16408...
+2025-11-13 05:38:21,631 - INFO - report: {'django__django-16408': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_multilevel_reverse_fk_cyclic_select_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_multilevel_reverse_fk_cyclic_select_related)', 'test_multilevel_reverse_fk_select_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_multilevel_reverse_fk_select_related)']}, 'PASS_TO_PASS': {'success': ['test_foreign_key (known_related_objects.tests.ExistingRelatedInstancesTests.test_foreign_key)', 'test_foreign_key_multiple_prefetch (known_related_objects.tests.ExistingRelatedInstancesTests.test_foreign_key_multiple_prefetch)', 'test_foreign_key_prefetch_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_foreign_key_prefetch_related)', 'test_one_to_one (known_related_objects.tests.ExistingRelatedInstancesTests.test_one_to_one)', 'test_one_to_one_multi_prefetch_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_one_to_one_multi_prefetch_related)', 'test_one_to_one_multi_select_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_one_to_one_multi_select_related)', 'test_one_to_one_prefetch_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_one_to_one_prefetch_related)', 'test_one_to_one_select_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_one_to_one_select_related)', 'test_queryset_and (known_related_objects.tests.ExistingRelatedInstancesTests.test_queryset_and)', 'test_queryset_or (known_related_objects.tests.ExistingRelatedInstancesTests.test_queryset_or)', 'test_queryset_or_different_cached_items (known_related_objects.tests.ExistingRelatedInstancesTests.test_queryset_or_different_cached_items)', 'test_queryset_or_only_one_with_precache (known_related_objects.tests.ExistingRelatedInstancesTests.test_queryset_or_only_one_with_precache)', 'test_reverse_fk_select_related_multiple (known_related_objects.tests.ExistingRelatedInstancesTests.test_reverse_fk_select_related_multiple)', 'test_reverse_one_to_one (known_related_objects.tests.ExistingRelatedInstancesTests.test_reverse_one_to_one)', 'test_reverse_one_to_one_multi_prefetch_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_reverse_one_to_one_multi_prefetch_related)', 'test_reverse_one_to_one_multi_select_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_reverse_one_to_one_multi_select_related)', 'test_reverse_one_to_one_prefetch_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_reverse_one_to_one_prefetch_related)', 'test_reverse_one_to_one_select_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_reverse_one_to_one_select_related)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-16408: resolved: False
+2025-11-13 05:38:21,631 - INFO - Attempting to stop container sweb.eval.django__django-16408.acr_eval...
+2025-11-13 05:38:37,264 - INFO - Attempting to remove container sweb.eval.django__django-16408.acr_eval...
+2025-11-13 05:38:37,342 - INFO - Container sweb.eval.django__django-16408.acr_eval removed.
+2025-11-13 05:38:37,343 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.django_1776_django-16408:latest...
+2025-11-13 05:38:37,849 - INFO - Image swebench/sweb.eval.x86_64.django_1776_django-16408:latest removed.

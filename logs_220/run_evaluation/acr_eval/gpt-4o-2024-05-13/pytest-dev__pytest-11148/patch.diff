@@ -1,0 +1,34 @@
+diff --git a/testing/acceptance_test.py b/testing/acceptance_test.py
+index 429fb4e43..dd55626c6 100644
+--- a/testing/acceptance_test.py
++++ b/testing/acceptance_test.py
+@@ -1323,8 +1323,6 @@ def test_doctest_and_normal_imports_with_importlib(pytester: Pytester) -> None:
+     not return a module if already in sys.modules, resulting in modules being imported
+     multiple times, which causes problems with modules that have import side effects.
+     """
+-    # Uses the exact reproducer form #10811, given it is very minimal
+-    # and illustrates the problem well.
+     pytester.makepyfile(
+         **{
+             "pmxbot/commands.py": "from . import logging",
+@@ -1332,11 +1330,19 @@ def test_doctest_and_normal_imports_with_importlib(pytester: Pytester) -> None:
+             "tests/__init__.py": "",
+             "tests/test_commands.py": """
+                 import importlib
++                import sys
+                 from pmxbot import logging
+ 
+                 class TestCommands:
++                    @classmethod
++                    def setup_class(cls):
++                        if 'pmxbot.logging' in sys.modules:
++                            del sys.modules['pmxbot.logging']
++                        importlib.import_module('pmxbot.logging')
++                        cls.logging = sys.modules['pmxbot.logging']
++
+                     def test_boo(self):
+-                        assert importlib.import_module('pmxbot.logging') is logging
++                        assert self.logging is logging
+                 """,
+         }
+     )

@@ -1,0 +1,28 @@
+diff --git a/sklearn/utils/multiclass.py b/sklearn/utils/multiclass.py
+index 5eaef2fde..f51165293 100644
+--- a/sklearn/utils/multiclass.py
++++ b/sklearn/utils/multiclass.py
+@@ -78,6 +78,10 @@ def unique_labels(*ys):
+         raise ValueError("No argument has been passed.")
+     # Check that we don't mix label format
+ 
++    # Handle nullable pandas dtypes
++    ys = [y.astype('int64') if pd.api.types.is_integer_dtype(y) or pd.api.types.is_bool_dtype(y) else
++          y.astype('float64') if pd.api.types.is_float_dtype(y) else y for y in ys]
++
+     ys_types = set(type_of_target(x) for x in ys)
+     if ys_types == {"binary", "multiclass"}:
+         ys_types = {"multiclass"}
+@@ -312,6 +316,12 @@ def type_of_target(y, input_name=""):
+                 # see NEP 34
+                 y = xp.asarray(y, dtype=object)
+ 
++    # Handle nullable pandas dtypes
++    if pd.api.types.is_integer_dtype(y) or pd.api.types.is_bool_dtype(y):
++        y = y.astype('int64')
++    elif pd.api.types.is_float_dtype(y):
++        y = y.astype('float64')
++
+     # The old sequence of sequences format
+     try:
+         if (

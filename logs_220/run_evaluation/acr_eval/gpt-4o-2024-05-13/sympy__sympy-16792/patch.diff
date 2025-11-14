@@ -1,0 +1,27 @@
+diff --git a/sympy/utilities/autowrap.py b/sympy/utilities/autowrap.py
+index bd6afb12d1..b510096b84 100644
+--- a/sympy/utilities/autowrap.py
++++ b/sympy/utilities/autowrap.py
+@@ -441,9 +441,9 @@ def _prototype_arg(self, arg):
+         np_types = {'double': 'np.double_t',
+                     'int': 'np.int_t'}
+         t = arg.get_datatype('c')
+-        if arg.dimensions:
++        if arg.dimensions or arg.is_pointer:
+             self._need_numpy = True
+-            ndim = len(arg.dimensions)
++            ndim = len(arg.dimensions) if arg.dimensions else 1
+             mtype = np_types[t]
+             return mat_dec.format(mtype=mtype, ndim=ndim, name=self._string_var(arg.name))
+         else:
+@@ -451,8 +451,8 @@ def _prototype_arg(self, arg):
+ 
+     def _declare_arg(self, arg):
+         proto = self._prototype_arg(arg)
+-        if arg.dimensions:
+-            shape = '(' + ','.join(self._string_var(i[1] + 1) for i in arg.dimensions) + ')'
++        if arg.dimensions or arg.is_pointer:
++            shape = '(' + ','.join(self._string_var(i[1] + 1) for i in arg.dimensions) + ')' if arg.dimensions else '(1,)'
+             return proto + " = np.empty({shape})".format(shape=shape)
+         else:
+             return proto + " = 0"

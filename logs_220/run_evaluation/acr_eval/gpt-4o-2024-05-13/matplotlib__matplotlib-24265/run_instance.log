@@ -1,0 +1,337 @@
+2025-11-13 05:51:50,502 - INFO - Creating container for matplotlib__matplotlib-24265...
+2025-11-13 05:52:22,620 - INFO - Container for matplotlib__matplotlib-24265 created: 7c2282df6601bab69989c19de449ea95b385b885e4703327d74262ef4fa52db6
+2025-11-13 05:52:22,939 - INFO - Container for matplotlib__matplotlib-24265 started: 7c2282df6601bab69989c19de449ea95b385b885e4703327d74262ef4fa52db6
+2025-11-13 05:52:22,939 - INFO - Intermediate patch for matplotlib__matplotlib-24265 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/matplotlib__matplotlib-24265/patch.diff, now applying to container...
+2025-11-13 05:52:23,075 - INFO - >>>>> Applied Patch:
+Checking patch lib/matplotlib/style/core.py...
+Applied patch lib/matplotlib/style/core.py cleanly.
+
+2025-11-13 05:52:24,402 - INFO - Git diff before:
+diff --git a/lib/matplotlib/style/core.py b/lib/matplotlib/style/core.py
+index fb0a5426e6..690ab2ec51 100644
+--- a/lib/matplotlib/style/core.py
++++ b/lib/matplotlib/style/core.py
+@@ -114,22 +114,22 @@ def use(style):
+         if isinstance(s, str):
+             s = style_alias.get(s, s)
+             if s in [
+-                "seaborn",
+-                "seaborn-bright",
+-                "seaborn-colorblind",
+-                "seaborn-dark",
+-                "seaborn-darkgrid",
+-                "seaborn-dark-palette",
+-                "seaborn-deep",
+-                "seaborn-muted",
+-                "seaborn-notebook",
+-                "seaborn-paper",
+-                "seaborn-pastel",
+-                "seaborn-poster",
+-                "seaborn-talk",
+-                "seaborn-ticks",
+-                "seaborn-white",
+-                "seaborn-whitegrid",
++                "seaborn-v0_8",
++                "seaborn-v0_8-bright",
++                "seaborn-v0_8-colorblind",
++                "seaborn-v0_8-dark",
++                "seaborn-v0_8-darkgrid",
++                "seaborn-v0_8-dark-palette",
++                "seaborn-v0_8-deep",
++                "seaborn-v0_8-muted",
++                "seaborn-v0_8-notebook",
++                "seaborn-v0_8-paper",
++                "seaborn-v0_8-pastel",
++                "seaborn-v0_8-poster",
++                "seaborn-v0_8-talk",
++                "seaborn-v0_8-ticks",
++                "seaborn-v0_8-white",
++                "seaborn-v0_8-whitegrid",
+             ]:
+                 _api.warn_deprecated(
+                     "3.6", message="The seaborn styles shipped by Matplotlib "
+2025-11-13 05:52:24,402 - INFO - Eval script for matplotlib__matplotlib-24265 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/matplotlib__matplotlib-24265/eval.sh; copying to container...
+2025-11-13 05:53:51,160 - INFO - Test runtime: 86.70 seconds
+2025-11-13 05:53:51,161 - INFO - Test output for matplotlib__matplotlib-24265 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/matplotlib__matplotlib-24265/test_output.txt
+2025-11-13 05:53:51,240 - INFO - Git diff after:
+diff --git a/lib/matplotlib/style/core.py b/lib/matplotlib/style/core.py
+index fb0a5426e6..690ab2ec51 100644
+--- a/lib/matplotlib/style/core.py
++++ b/lib/matplotlib/style/core.py
+@@ -114,22 +114,22 @@ def use(style):
+         if isinstance(s, str):
+             s = style_alias.get(s, s)
+             if s in [
+-                "seaborn",
+-                "seaborn-bright",
+-                "seaborn-colorblind",
+-                "seaborn-dark",
+-                "seaborn-darkgrid",
+-                "seaborn-dark-palette",
+-                "seaborn-deep",
+-                "seaborn-muted",
+-                "seaborn-notebook",
+-                "seaborn-paper",
+-                "seaborn-pastel",
+-                "seaborn-poster",
+-                "seaborn-talk",
+-                "seaborn-ticks",
+-                "seaborn-white",
+-                "seaborn-whitegrid",
++                "seaborn-v0_8",
++                "seaborn-v0_8-bright",
++                "seaborn-v0_8-colorblind",
++                "seaborn-v0_8-dark",
++                "seaborn-v0_8-darkgrid",
++                "seaborn-v0_8-dark-palette",
++                "seaborn-v0_8-deep",
++                "seaborn-v0_8-muted",
++                "seaborn-v0_8-notebook",
++                "seaborn-v0_8-paper",
++                "seaborn-v0_8-pastel",
++                "seaborn-v0_8-poster",
++                "seaborn-v0_8-talk",
++                "seaborn-v0_8-ticks",
++                "seaborn-v0_8-white",
++                "seaborn-v0_8-whitegrid",
+             ]:
+                 _api.warn_deprecated(
+                     "3.6", message="The seaborn styles shipped by Matplotlib "
+2025-11-13 05:53:51,240 - INFO - Grading answer for matplotlib__matplotlib-24265...
+2025-11-13 05:53:51,241 - INFO - report: {'matplotlib__matplotlib-24265': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['lib/matplotlib/tests/test_style.py::test_deprecated_seaborn_styles']}, 'PASS_TO_PASS': {'success': ['lib/matplotlib/tests/test_style.py::test_invalid_rc_warning_includes_filename', 'lib/matplotlib/tests/test_style.py::test_available', 'lib/matplotlib/tests/test_style.py::test_use', 'lib/matplotlib/tests/test_style.py::test_use_url', 'lib/matplotlib/tests/test_style.py::test_single_path', 'lib/matplotlib/tests/test_style.py::test_context', 'lib/matplotlib/tests/test_style.py::test_context_with_dict', 'lib/matplotlib/tests/test_style.py::test_context_with_dict_after_namedstyle', 'lib/matplotlib/tests/test_style.py::test_context_with_dict_before_namedstyle', 'lib/matplotlib/tests/test_style.py::test_context_with_union_of_dict_and_namedstyle', 'lib/matplotlib/tests/test_style.py::test_context_with_badparam', 'lib/matplotlib/tests/test_style.py::test_alias[mpl20]', 'lib/matplotlib/tests/test_style.py::test_alias[mpl15]', 'lib/matplotlib/tests/test_style.py::test_xkcd_no_cm', 'lib/matplotlib/tests/test_style.py::test_xkcd_cm', 'lib/matplotlib/tests/test_style.py::test_up_to_date_blacklist'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for matplotlib__matplotlib-24265: resolved: False
+2025-11-13 05:53:51,242 - INFO - Attempting to stop container sweb.eval.matplotlib__matplotlib-24265.acr_eval...
+2025-11-13 05:55:06,280 - INFO - Failed to stop container sweb.eval.matplotlib__matplotlib-24265.acr_eval: UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=75). Trying to forcefully kill...
+2025-11-13 05:56:06,320 - INFO - Failed to forcefully kill container sweb.eval.matplotlib__matplotlib-24265.acr_eval: UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=60)
+Traceback (most recent call last):
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1428, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/util/retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=75)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/SWE-bench/swebench/harness/docker_utils.py", line 135, in cleanup_container
+    container.stop(timeout=15)
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/models/containers.py", line 452, in stop
+    return self.client.api.stop(self.id, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/utils/decorators.py", line 19, in wrapped
+    return f(self, resource_id, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/api/container.py", line 1211, in stop
+    res = self._post(url, params=params, timeout=conn_timeout)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/utils/decorators.py", line 44, in inner
+    return f(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/api/client.py", line 242, in _post
+    return self.post(url, **self._set_request_timeout(kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/sessions.py", line 637, in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/adapters.py", line 690, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=75)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1428, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/util/retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=60)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/SWE-bench/swebench/harness/docker_utils.py", line 142, in cleanup_container
+    container_info = client.api.inspect_container(container_id)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/utils/decorators.py", line 19, in wrapped
+    return f(self, resource_id, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/api/container.py", line 794, in inspect_container
+    self._get(self._url("/containers/{0}/json", container)), True
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/utils/decorators.py", line 44, in inner
+    return f(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/api/client.py", line 246, in _get
+    return self.get(url, **self._set_request_timeout(kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/adapters.py", line 690, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=60)
+
+2025-11-13 05:56:06,320 - INFO - Attempting to remove container sweb.eval.matplotlib__matplotlib-24265.acr_eval...
+2025-11-13 05:57:06,325 - INFO - Failed to remove container sweb.eval.matplotlib__matplotlib-24265.acr_eval: UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=60)
+Traceback (most recent call last):
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1428, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/util/retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/urllib3/connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=60)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/SWE-bench/swebench/harness/docker_utils.py", line 164, in cleanup_container
+    container.remove(force=True)
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/models/containers.py", line 367, in remove
+    return self.client.api.remove_container(self.id, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/utils/decorators.py", line 19, in wrapped
+    return f(self, resource_id, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/api/container.py", line 1034, in remove_container
+    res = self._delete(
+          ^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/utils/decorators.py", line 44, in inner
+    return f(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/docker/api/client.py", line 254, in _delete
+    return self.delete(url, **self._set_request_timeout(kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/sessions.py", line 671, in delete
+    return self.request("DELETE", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/swebench-env/lib/python3.12/site-packages/requests/adapters.py", line 690, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=60)
+
+2025-11-13 05:57:06,325 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.matplotlib_1776_matplotlib-24265:latest...
+2025-11-13 05:57:06,444 - INFO - Image swebench/sweb.eval.x86_64.matplotlib_1776_matplotlib-24265:latest removed.

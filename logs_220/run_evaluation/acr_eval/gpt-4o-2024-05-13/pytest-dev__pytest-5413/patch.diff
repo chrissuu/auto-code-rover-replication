@@ -1,0 +1,22 @@
+diff --git a/src/_pytest/python_api.py b/src/_pytest/python_api.py
+index 011181a40..95e39188f 100644
+--- a/src/_pytest/python_api.py
++++ b/src/_pytest/python_api.py
+@@ -715,6 +715,8 @@ class RaisesContext:
+ 
+     def __enter__(self):
+         self.excinfo = _pytest._code.ExceptionInfo.for_later()
++        # Override the __str__ method of the ExceptionInfo object
++        self.excinfo.__str__ = lambda: str(self.excinfo.value)
+         return self.excinfo
+ 
+     def __exit__(self, *tp):
+@@ -722,6 +724,8 @@ class RaisesContext:
+         if tp[0] is None:
+             fail(self.message)
+         self.excinfo.__init__(tp)
++        # Override the __str__ method of the ExceptionInfo object
++        self.excinfo.__str__ = lambda: str(self.excinfo.value)
+         suppress_exception = issubclass(self.excinfo.type, self.expected_exception)
+         if self.match_expr is not None and suppress_exception:
+             self.excinfo.match(self.match_expr)

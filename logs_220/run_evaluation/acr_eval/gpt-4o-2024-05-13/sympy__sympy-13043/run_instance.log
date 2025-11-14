@@ -1,0 +1,43 @@
+2025-11-13 06:19:19,263 - INFO - Creating container for sympy__sympy-13043...
+2025-11-13 06:19:20,076 - INFO - Container for sympy__sympy-13043 created: 39311d3ead886e167af52692f586be6e64430443c366b4ac5d8ee14c444d9b93
+2025-11-13 06:19:20,210 - INFO - Container for sympy__sympy-13043 started: 39311d3ead886e167af52692f586be6e64430443c366b4ac5d8ee14c444d9b93
+2025-11-13 06:19:20,210 - INFO - Intermediate patch for sympy__sympy-13043 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-13043/patch.diff, now applying to container...
+2025-11-13 06:19:20,327 - INFO - >>>>> Applied Patch:
+Checking patch sympy/integrals/intpoly.py...
+Applied patch sympy/integrals/intpoly.py cleanly.
+
+2025-11-13 06:19:20,649 - INFO - Git diff before:
+diff --git a/sympy/integrals/intpoly.py b/sympy/integrals/intpoly.py
+index fc72bd206f..e1ffc570cd 100644
+--- a/sympy/integrals/intpoly.py
++++ b/sympy/integrals/intpoly.py
+@@ -593,7 +593,7 @@ def decompose(expr, separate=False):
+         poly_dict[0] = expr
+ 
+     if separate:
+-        return list(poly_dict.values())
++        return [poly_dict[key] for key in sorted(poly_dict.keys())]
+     return poly_dict
+2025-11-13 06:19:20,649 - INFO - Eval script for sympy__sympy-13043 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-13043/eval.sh; copying to container...
+2025-11-13 06:19:28,063 - INFO - Test runtime: 7.36 seconds
+2025-11-13 06:19:28,063 - INFO - Test output for sympy__sympy-13043 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-13043/test_output.txt
+2025-11-13 06:19:28,125 - INFO - Git diff after:
+diff --git a/sympy/integrals/intpoly.py b/sympy/integrals/intpoly.py
+index fc72bd206f..e1ffc570cd 100644
+--- a/sympy/integrals/intpoly.py
++++ b/sympy/integrals/intpoly.py
+@@ -593,7 +593,7 @@ def decompose(expr, separate=False):
+         poly_dict[0] = expr
+ 
+     if separate:
+-        return list(poly_dict.values())
++        return [poly_dict[key] for key in sorted(poly_dict.keys())]
+     return poly_dict
+2025-11-13 06:19:28,126 - INFO - Grading answer for sympy__sympy-13043...
+2025-11-13 06:19:28,136 - INFO - report: {'sympy__sympy-13043': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_decompose']}, 'PASS_TO_PASS': {'success': ['test_best_origin'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-13043: resolved: False
+2025-11-13 06:19:28,136 - INFO - Attempting to stop container sweb.eval.sympy__sympy-13043.acr_eval...
+2025-11-13 06:19:44,759 - INFO - Attempting to remove container sweb.eval.sympy__sympy-13043.acr_eval...
+2025-11-13 06:19:44,799 - INFO - Container sweb.eval.sympy__sympy-13043.acr_eval removed.
+2025-11-13 06:19:44,799 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-13043:latest...
+2025-11-13 06:19:44,903 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-13043:latest removed.

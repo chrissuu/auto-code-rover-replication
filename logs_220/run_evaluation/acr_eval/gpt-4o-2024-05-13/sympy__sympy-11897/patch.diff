@@ -1,0 +1,24 @@
+diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py
+index 1edc712358..5ffeea399b 100644
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -409,7 +409,7 @@ def convert(expr):
+             elif len(snumer.split()) > ratio*ldenom:
+                 # handle long fractions
+                 if self._needs_mul_brackets(numer, last=True):
+-                    tex += r"\frac{1}{%s}%s\left(%s\right)" \
++                    tex += r"\frac{%s}{%s}%s\left(%s\right)" \
+                         % (sdenom, separator, snumer)
+                 elif numer.is_Mul:
+                     # split a long numerator
+@@ -429,9 +429,7 @@ def convert(expr):
+                         tex += r"\frac{%s}{%s}%s%s" \
+                             % (convert(a), sdenom, separator, convert(b))
+                 else:
+-                    tex += r"\frac{1}{%s}%s%s" % (sdenom, separator, snumer)
+-            else:
+-                tex += r"\frac{%s}{%s}" % (snumer, sdenom)
++                    tex += r"\frac{%s}{%s}" % (snumer, sdenom)
+ 
+         if include_parens:
+             tex += ")"

@@ -1,0 +1,21 @@
+diff --git a/django/core/files/storage.py b/django/core/files/storage.py
+index 4c27fce605..1fd4e5a5c0 100644
+--- a/django/core/files/storage.py
++++ b/django/core/files/storage.py
+@@ -332,7 +332,15 @@ class FileSystemStorage(Storage):
+         url = filepath_to_uri(name)
+         if url is not None:
+             url = url.lstrip('/')
+-        return urljoin(self.base_url, url)
++        url = urljoin(self.base_url, url)
++        
++        # Prepend SCRIPT_NAME if it exists in the request's META
++        request = get_current_request()
++        if request and 'SCRIPT_NAME' in request.META:
++            script_name = request.META['SCRIPT_NAME']
++            url = urljoin(script_name, url)
++        
++        return url
+ 
+     def _datetime_from_timestamp(self, ts):
+         """

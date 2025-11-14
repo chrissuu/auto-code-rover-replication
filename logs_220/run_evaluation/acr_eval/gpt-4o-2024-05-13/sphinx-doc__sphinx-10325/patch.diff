@@ -1,0 +1,18 @@
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 62631f7ff..f33df7c9e 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -113,8 +113,12 @@ def inherited_members_option(arg: Any) -> Union[object, Set[str]]:
+     """Used to convert the :members: option to auto directives."""
+     if arg in (None, True):
+         return 'object'
++    elif isinstance(arg, str):
++        return {arg}
++    elif isinstance(arg, (list, tuple)):
++        return set(arg)
+     else:
+-        return arg
++        raise ValueError("Invalid value for :inherited-members: option")
+ 
+ 
+ def member_order_option(arg: Any) -> Optional[str]:

@@ -1,0 +1,71 @@
+diff --git a/sympy/ntheory/residue_ntheory.py b/sympy/ntheory/residue_ntheory.py
+index 9a3052d4c3..8d70e36623 100644
+--- a/sympy/ntheory/residue_ntheory.py
++++ b/sympy/ntheory/residue_ntheory.py
+@@ -768,8 +768,22 @@ def nthroot_mod(a, n, p, all_roots=False):
+     """
+     from sympy.core.numbers import igcdex
+     a, n, p = as_int(a), as_int(n), as_int(p)
++    
++    # Check if a % p == 0 and include 0 as a root if true
++    roots = []
++    if a % p == 0:
++        if all_roots:
++            roots.append(0)
++        else:
++            return 0
++    
+     if n == 2:
+-        return sqrt_mod(a, p, all_roots)
++        sqrt_roots = sqrt_mod(a, p, all_roots)
++        if all_roots:
++            roots.extend(sqrt_roots)
++        else:
++            return sqrt_roots
++    
+     # see Hackman "Elementary Number Theory" (2009), page 76
+     if not is_nthpow_residue(a, n, p):
+         return None
+@@ -777,7 +791,12 @@ def nthroot_mod(a, n, p, all_roots=False):
+         raise NotImplementedError("Not implemented for composite p")
+ 
+     if (p - 1) % n == 0:
+-        return _nthroot_mod1(a, n, p, all_roots)
++        nth_roots = _nthroot_mod1(a, n, p, all_roots)
++        if all_roots:
++            roots.extend(nth_roots)
++        else:
++            return nth_roots
++    
+     # The roots of ``x**n - a = 0 (mod p)`` are roots of
+     # ``gcd(x**n - a, x**(p - 1) - 1) = 0 (mod p)``
+     pa = n
+@@ -797,14 +816,23 @@ def nthroot_mod(a, n, p, all_roots=False):
+         a, b = b, c
+     if pa == 1:
+         if all_roots:
+-            res = [a]
++            roots.append(a)
+         else:
+-            res = a
++            return a
+     elif pa == 2:
+-        return sqrt_mod(a, p , all_roots)
++        sqrt_roots = sqrt_mod(a, p , all_roots)
++        if all_roots:
++            roots.extend(sqrt_roots)
++        else:
++            return sqrt_roots
+     else:
+-        res = _nthroot_mod1(a, pa, p, all_roots)
+-    return res
++        nth_roots = _nthroot_mod1(a, pa, p, all_roots)
++        if all_roots:
++            roots.extend(nth_roots)
++        else:
++            return nth_roots
++    
++    return roots if all_roots else roots[0]
+ 
+ 
+ def quadratic_residues(p):

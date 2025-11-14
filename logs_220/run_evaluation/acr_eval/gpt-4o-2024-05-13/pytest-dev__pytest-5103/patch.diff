@@ -1,0 +1,46 @@
+diff --git a/src/_pytest/assertion/rewrite.py b/src/_pytest/assertion/rewrite.py
+index 2903b8995..f42042d70 100644
+--- a/src/_pytest/assertion/rewrite.py
++++ b/src/_pytest/assertion/rewrite.py
+@@ -919,6 +919,41 @@ warn_explicit(
+         res_var = self.variable()
+         expl_list = self.assign(ast.List([], ast.Load()))
+         app = ast.Attribute(expl_list, "append", ast.Load())
++
++        # Check if the BoolOp is an `all` or `any` call and unroll the iterable
++        if isinstance(boolop.op, (ast.And, ast.Or)):
++            if any(isinstance(value, ast.Call) and isinstance(value.func, ast.Name) and value.func.id in {"all", "any"} for value in boolop.values):
++                new_values = []
++                for value in boolop.values:
++                    if isinstance(value, ast.Call) and isinstance(value.func, ast.Name) and value.func.id in {"all", "any"}:
++                        iter_var = self.variable()
++                        new_values.append(
++                            ast.For(
++                                target=iter_var,
++                                iter=value.args[0],
++                                body=[
++                                    ast.Expr(
++                                        value=ast.Call(
++                                            func=app,
++                                            args=[ast.Tuple(elts=[iter_var, value], ctx=ast.Load())],
++                                            keywords=[]
++                                        )
++                                    ),
++                                    ast.If(
++                                        test=ast.UnaryOp(
++                                            op=ast.Not() if value.func.id == "all" else ast.Is(),
++                                            operand=iter_var
++                                        ),
++                                        body=[ast.Assign(targets=[res_var], value=ast.Constant(value=False))],
++                                        orelse=[]
++                                    )
++                                ],
++                                orelse=[]
++                            )
++                        )
++                    else:
++                        new_values.append(value)
++                boolop.values = new_values
+         is_or = int(isinstance(boolop.op, ast.Or))
+         body = save = self.statements
+         fail_save = self.on_failure

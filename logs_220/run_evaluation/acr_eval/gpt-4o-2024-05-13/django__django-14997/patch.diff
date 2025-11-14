@@ -1,0 +1,28 @@
+diff --git a/tests/schema/models.py b/tests/schema/models.py
+index 75e4de0874..d15cbeb493 100644
+--- a/tests/schema/models.py
++++ b/tests/schema/models.py
+@@ -173,11 +173,20 @@ class NoteRename(models.Model):
+ 
+ 
+ class Tag(models.Model):
+-    title = models.CharField(max_length=255)
+-    slug = models.SlugField(unique=True)
++    name = models.SlugField(help_text="The tag key.")
++    value = models.CharField(max_length=150, help_text="The tag value.")
+ 
+     class Meta:
+-        apps = new_apps
++        ordering = ["name", "value"]
++        constraints = [
++            models.UniqueConstraint(
++                fields=["name", "value"],
++                name="unique_name_value",
++            )
++        ]
++
++    def __str__(self):
++        return f"{self.name}={self.value}"
+ 
+ 
+ class TagIndexed(models.Model):

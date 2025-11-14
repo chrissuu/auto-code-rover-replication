@@ -1,0 +1,24 @@
+diff --git a/sympy/polys/partfrac.py b/sympy/polys/partfrac.py
+index 612b8f4607..58a32f279e 100644
+--- a/sympy/polys/partfrac.py
++++ b/sympy/polys/partfrac.py
+@@ -76,6 +76,9 @@ def apart(f, x=None, full=False, **options):
+         return f
+     else:
+         P, Q = f.as_numer_denom()
++        if x is not None:
++            P = P.expand()
++            Q = Q.expand()
+ 
+     _options = options.copy()
+     options = set_defaults(options, extension=True)
+@@ -138,6 +141,9 @@ def apart(f, x=None, full=False, **options):
+         else:
+             partial = apart_full_decomposition(P, Q)
+ 
++    # Ensure that the partial fractions are expanded correctly
++    partial = partial.expand()
++
+     terms = S.Zero
+ 
+     for term in Add.make_args(partial):

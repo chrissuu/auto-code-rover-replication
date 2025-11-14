@@ -1,0 +1,49 @@
+2025-11-13 06:27:32,777 - INFO - Creating container for sympy__sympy-24102...
+2025-11-13 06:27:36,935 - INFO - Container for sympy__sympy-24102 created: f6a8e875b109217e695aac97ff8884e66a4a74f1c76cb1b81b5cd804c7042e68
+2025-11-13 06:27:37,184 - INFO - Container for sympy__sympy-24102 started: f6a8e875b109217e695aac97ff8884e66a4a74f1c76cb1b81b5cd804c7042e68
+2025-11-13 06:27:37,184 - INFO - Intermediate patch for sympy__sympy-24102 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-24102/patch.diff, now applying to container...
+2025-11-13 06:27:37,350 - INFO - >>>>> Applied Patch:
+Checking patch sympy/parsing/mathematica.py...
+Applied patch sympy/parsing/mathematica.py cleanly.
+
+2025-11-13 06:27:37,886 - INFO - Git diff before:
+diff --git a/sympy/parsing/mathematica.py b/sympy/parsing/mathematica.py
+index 7ea14ce33a..d784740051 100644
+--- a/sympy/parsing/mathematica.py
++++ b/sympy/parsing/mathematica.py
+@@ -664,6 +664,9 @@ def _from_mathematica_to_tokens(self, code: str):
+         while tokens and tokens[-1] == "\n":
+             tokens.pop(-1)
+ 
++        # Ensure Greek characters are correctly tokenized
++        tokens = [token if not re.match(r'^[\u0370-\u03FF]+$', token) else sympify(token) for token in tokens]
++
+         return tokens
+ 
+     def _is_op(self, token: tUnion[str, list]) -> bool:
+2025-11-13 06:27:37,886 - INFO - Eval script for sympy__sympy-24102 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-24102/eval.sh; copying to container...
+2025-11-13 06:27:42,532 - INFO - Test runtime: 4.59 seconds
+2025-11-13 06:27:42,532 - INFO - Test output for sympy__sympy-24102 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-24102/test_output.txt
+2025-11-13 06:27:42,596 - INFO - Git diff after:
+diff --git a/sympy/parsing/mathematica.py b/sympy/parsing/mathematica.py
+index 7ea14ce33a..d784740051 100644
+--- a/sympy/parsing/mathematica.py
++++ b/sympy/parsing/mathematica.py
+@@ -664,6 +664,9 @@ def _from_mathematica_to_tokens(self, code: str):
+         while tokens and tokens[-1] == "\n":
+             tokens.pop(-1)
+ 
++        # Ensure Greek characters are correctly tokenized
++        tokens = [token if not re.match(r'^[\u0370-\u03FF]+$', token) else sympify(token) for token in tokens]
++
+         return tokens
+ 
+     def _is_op(self, token: tUnion[str, list]) -> bool:
+2025-11-13 06:27:42,596 - INFO - Grading answer for sympy__sympy-24102...
+2025-11-13 06:27:42,596 - INFO - report: {'sympy__sympy-24102': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_mathematica', 'test_parser_mathematica_tokenizer']}, 'PASS_TO_PASS': {'success': [], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-24102: resolved: False
+2025-11-13 06:27:42,597 - INFO - Attempting to stop container sweb.eval.sympy__sympy-24102.acr_eval...
+2025-11-13 06:28:04,002 - INFO - Attempting to remove container sweb.eval.sympy__sympy-24102.acr_eval...
+2025-11-13 06:28:04,201 - INFO - Container sweb.eval.sympy__sympy-24102.acr_eval removed.
+2025-11-13 06:28:04,201 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-24102:latest...
+2025-11-13 06:28:05,170 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-24102:latest removed.

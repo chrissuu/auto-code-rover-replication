@@ -1,0 +1,14 @@
+diff --git a/django/db/models/query.py b/django/db/models/query.py
+index 07d6ffd4ca..08db9de480 100644
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -1131,7 +1131,8 @@ class QuerySet:
+         assert not self.query.is_sliced, \
+             "Cannot reorder a query once a slice has been taken."
+         obj = self._chain()
+-        obj.query.clear_ordering(force_empty=False)
++        # Clear any existing ordering, including default ordering from Meta class
++        obj.query.clear_ordering(force_empty=True)
+         obj.query.add_ordering(*field_names)
+         return obj
+ 

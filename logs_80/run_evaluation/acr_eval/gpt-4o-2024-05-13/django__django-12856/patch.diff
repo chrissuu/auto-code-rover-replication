@@ -1,0 +1,91 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index 7bb3fa4706..36817335f6 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -1280,6 +1280,7 @@ class Model(metaclass=ModelBase):
+                 *cls._check_indexes(databases),
+                 *cls._check_ordering(),
+                 *cls._check_constraints(databases),
++                *cls._check_unique_constraints(),
+             ]
+ 
+         return errors
+@@ -1686,6 +1687,63 @@ class Model(metaclass=ModelBase):
+                     )
+         return errors
+ 
++    @classmethod
++    def _check_unique_constraints(cls):
++        """Check the fields of UniqueConstraints."""
++        errors = []
++        for constraint in cls._meta.constraints:
++            if isinstance(constraint, UniqueConstraint):
++                constraint.set_model(cls)
++                errors.extend(cls._check_local_fields(constraint.fields, "UniqueConstraint"))
++        return errors
++        from django.db import models
++
++        # In order to avoid hitting the relation tree prematurely, we use our
++        # own fields_map instead of using get_field()
++        forward_fields_map = {}
++        for field in cls._meta._get_fields(reverse=False):
++            forward_fields_map[field.name] = field
++            if hasattr(field, 'attname'):
++                forward_fields_map[field.attname] = field
++
++        errors = []
++        for field_name in fields:
++            try:
++                field = forward_fields_map[field_name]
++            except KeyError:
++                errors.append(
++                    checks.Error(
++                        "'%s' refers to the nonexistent field '%s'." % (
++                            option, field_name,
++                        ),
++                        obj=cls,
++                        id='models.E012',
++                    )
++                )
++            else:
++                if isinstance(field.remote_field, models.ManyToManyRel):
++                    errors.append(
++                        checks.Error(
++                            "'%s' refers to a ManyToManyField '%s', but "
++                            "ManyToManyFields are not permitted in '%s'." % (
++                                option, field_name, option,
++                            ),
++                            obj=cls,
++                            id='models.E013',
++                        )
++                    )
++                elif field not in cls._meta.local_fields:
++                    errors.append(
++                        checks.Error(
++                            "'%s' refers to field '%s' which is not local to model '%s'."
++                            % (option, field_name, cls._meta.object_name),
++                            hint="This issue may be caused by multi-table inheritance.",
++                            obj=cls,
++                            id='models.E016',
++                        )
++                    )
++        return errors
++
+     @classmethod
+     def _check_ordering(cls):
+         """
+diff --git a/django/db/models/constraints.py b/django/db/models/constraints.py
+index 64bd60484e..db0fd16104 100644
+--- a/django/db/models/constraints.py
++++ b/django/db/models/constraints.py
+@@ -94,6 +94,10 @@ class UniqueConstraint(BaseConstraint):
+         self.condition = condition
+         self.deferrable = deferrable
+         super().__init__(name)
++        self.model = None  # This will be set later when the constraint is added to a model
++
++    def set_model(self, model):
++        self.model = model
+ 
+     def _get_condition_sql(self, model, schema_editor):
+         if self.condition is None:

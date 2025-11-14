@@ -1,0 +1,25 @@
+diff --git a/pylint/checkers/misc.py b/pylint/checkers/misc.py
+index 69149e61a..2fc033ef2 100644
+--- a/pylint/checkers/misc.py
++++ b/pylint/checkers/misc.py
+@@ -190,12 +190,14 @@ class EncodingChecker(BaseChecker):
+             # emit warnings if necessary
+             match = self._fixme_pattern.search("#" + comment_text.lower())
+             if match:
+-                self.add_message(
+-                    "fixme",
+-                    col_offset=comment.start[1] + 1,
+-                    args=comment_text,
+-                    line=comment.start[0],
+-                )
++                note = match.group(1).strip()
++                if note in self.config.notes:
++                    self.add_message(
++                        "fixme",
++                        col_offset=comment.start[1] + 1,
++                        args=comment_text,
++                        line=comment.start[0],
++                    )
+ 
+ 
+ def register(linter: "PyLinter") -> None:

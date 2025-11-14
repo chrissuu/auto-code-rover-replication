@@ -1,0 +1,16 @@
+diff --git a/sympy/assumptions/refine.py b/sympy/assumptions/refine.py
+index 612ae724df..761a3a4f89 100644
+--- a/sympy/assumptions/refine.py
++++ b/sympy/assumptions/refine.py
+@@ -44,6 +44,11 @@ def refine(expr, assumptions=True):
+         return new_expr
+     return refine(new_expr, assumptions)
+ 
++def refine_MatrixExpr(expr, assumptions):
++    if expr.is_Identity:
++        return Identity(expr.shape[0])
++    return expr
++
+ 
+ def refine_abs(expr, assumptions):
+     """

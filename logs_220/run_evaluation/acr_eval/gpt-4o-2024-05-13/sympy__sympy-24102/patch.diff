@@ -1,0 +1,14 @@
+diff --git a/sympy/parsing/mathematica.py b/sympy/parsing/mathematica.py
+index 7ea14ce33a..d784740051 100644
+--- a/sympy/parsing/mathematica.py
++++ b/sympy/parsing/mathematica.py
+@@ -664,6 +664,9 @@ def _from_mathematica_to_tokens(self, code: str):
+         while tokens and tokens[-1] == "\n":
+             tokens.pop(-1)
+ 
++        # Ensure Greek characters are correctly tokenized
++        tokens = [token if not re.match(r'^[\u0370-\u03FF]+$', token) else sympify(token) for token in tokens]
++
+         return tokens
+ 
+     def _is_op(self, token: tUnion[str, list]) -> bool:

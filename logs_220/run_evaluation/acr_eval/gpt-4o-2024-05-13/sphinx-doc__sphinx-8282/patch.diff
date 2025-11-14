@@ -1,0 +1,33 @@
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 978fd5df8..f50b5d5a2 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1213,6 +1213,11 @@ class FunctionDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # typ
+ 
+         try:
+             self.env.app.emit('autodoc-before-process-signature', self.object, False)
++
++            # Handle overloaded functions
++            if self.analyzer and '.'.join(self.objpath) in self.analyzer.overloads:
++                return self.format_overload_args(**kwargs)
++
+             sig = inspect.signature(self.object, follow_wrapped=True,
+                                     type_aliases=self.env.config.autodoc_type_aliases)
+             args = stringify_signature(sig, **kwargs)
+@@ -1228,6 +1233,16 @@ class FunctionDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # typ
+             args = args.replace('\\', '\\\\')
+         return args
+ 
++    def format_overload_args(self, **kwargs: Any) -> str:
++        sigs = []
++        __globals__ = safe_getattr(self.object, '__globals__', {})
++        for overload in self.analyzer.overloads.get('.'.join(self.objpath)):
++            overload = evaluate_signature(overload, __globals__,
++                                          self.env.config.autodoc_type_aliases)
++            sig = stringify_signature(overload, **kwargs)
++            sigs.append(sig)
++        return "\n".join(sigs)
++
+     def document_members(self, all_members: bool = False) -> None:
+         pass
+ 

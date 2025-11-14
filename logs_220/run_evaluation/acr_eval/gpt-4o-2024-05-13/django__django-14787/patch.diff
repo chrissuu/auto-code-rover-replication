@@ -1,0 +1,17 @@
+diff --git a/django/utils/decorators.py b/django/utils/decorators.py
+index 5c9a5d01c7..aca7086664 100644
+--- a/django/utils/decorators.py
++++ b/django/utils/decorators.py
+@@ -49,6 +49,12 @@ def _multi_decorate(decorators, method):
+     update_wrapper(_wrapper, method)
+     return _wrapper
+ 
++def _update_method_wrapper(wrapper, decorator):
++    """
++    Update the wrapper function to look more like the original function.
++    """
++    update_wrapper(wrapper, decorator)
++
+ 
+ def method_decorator(decorator, name=''):
+     """

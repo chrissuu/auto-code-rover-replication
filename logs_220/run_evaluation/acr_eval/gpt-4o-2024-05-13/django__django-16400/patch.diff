@@ -1,0 +1,38 @@
+diff --git a/django/core/management/commands/migrate.py b/django/core/management/commands/migrate.py
+index 1541843066..e654aeb362 100644
+--- a/django/core/management/commands/migrate.py
++++ b/django/core/management/commands/migrate.py
+@@ -116,6 +116,9 @@ class Command(BaseCommand):
+         # Work out which apps have migrations and which do not
+         executor = MigrationExecutor(connection, self.migration_progress_callback)
+ 
++        # Ensure the connection respects the database parameter
++        connection.set_schema_to_public()
++
+         # Raise an error if any migrations are applied before their dependencies.
+         executor.loader.check_consistent_history(connection)
+ 
+diff --git a/django/db/migrations/executor.py b/django/db/migrations/executor.py
+index eb738cf457..135752a2d8 100644
+--- a/django/db/migrations/executor.py
++++ b/django/db/migrations/executor.py
+@@ -247,7 +247,8 @@ class MigrationExecutor:
+             if not fake:
+                 # Alright, do it normally
+                 with self.connection.schema_editor(
+-                    atomic=migration.atomic
++                    atomic=migration.atomic,
++                    using=self.connection.alias  # Ensure the correct database is used
+                 ) as schema_editor:
+                     state = migration.apply(state, schema_editor)
+                     if not schema_editor.deferred_sql:
+@@ -274,7 +275,8 @@ class MigrationExecutor:
+             self.progress_callback("unapply_start", migration, fake)
+         if not fake:
+             with self.connection.schema_editor(
+-                atomic=migration.atomic
++                atomic=migration.atomic,
++                using=self.connection.alias  # Ensure the correct database is used
+             ) as schema_editor:
+                 state = migration.unapply(state, schema_editor)
+         # For replacement migrations, also record individual statuses.

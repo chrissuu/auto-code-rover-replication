@@ -1,0 +1,46 @@
+diff --git a/sympy/matrices/expressions/blockmatrix.py b/sympy/matrices/expressions/blockmatrix.py
+index b821c42845..cdbc4d2a5a 100644
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -233,18 +233,38 @@ def transpose(self):
+         return self._eval_transpose()
+ 
+     def _entry(self, i, j, **kwargs):
++        from sympy import Piecewise, And, Ge, Lt
++
++        # Initialize conditions and results for Piecewise
++        conditions = []
++        results = []
++
+         # Find row entry
++        row_offset = 0
+         for row_block, numrows in enumerate(self.rowblocksizes):
+             if (i < numrows) != False:
+                 break
+             else:
+-                i -= numrows
++                row_offset += numrows
++
++        col_offset = 0
+         for col_block, numcols in enumerate(self.colblocksizes):
+             if (j < numcols) != False:
+                 break
+             else:
+-                j -= numcols
+-        return self.blocks[row_block, col_block][i, j]
++                col_offset += numcols
++
++        for row_block, numrows in enumerate(self.rowblocksizes):
++            for col_block, numcols in enumerate(self.colblocksizes):
++                row_cond = And(Ge(i, row_offset), Lt(i, row_offset + numrows))
++                col_cond = And(Ge(j, col_offset), Lt(j, col_offset + numcols))
++                conditions.append(And(row_cond, col_cond))
++                results.append(self.blocks[row_block, col_block][i - row_offset, j - col_offset])
++                col_offset += numcols
++            row_offset += numrows
++            col_offset = 0
++
++        return Piecewise(*zip(results, conditions))
+ 
+     @property
+     def is_Identity(self):

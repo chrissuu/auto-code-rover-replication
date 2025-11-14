@@ -1,0 +1,17 @@
+diff --git a/django/db/models/query.py b/django/db/models/query.py
+index d9c9b0db04..0b01bdf51a 100644
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -737,6 +737,12 @@ class QuerySet:
+ 
+         # Clear the result cache, in case this QuerySet gets reused.
+         self._result_cache = None
++
++        # Ensure consistent result format when zero objects are deleted
++        if deleted == 0:
++            if not _rows_count:
++                _rows_count = {model._meta.label: 0 for model in collector.data.keys()}
++
+         return deleted, _rows_count
+ 
+     delete.alters_data = True

@@ -1,0 +1,36 @@
+diff --git a/astropy/io/ascii/rst.py b/astropy/io/ascii/rst.py
+index abdeba8ef..097355426 100644
+--- a/astropy/io/ascii/rst.py
++++ b/astropy/io/ascii/rst.py
+@@ -57,10 +57,14 @@ class RST(FixedWidth):
+     data_class = SimpleRSTData
+     header_class = SimpleRSTHeader
+ 
+-    def __init__(self):
+-        super().__init__(delimiter_pad=None, bookend=False)
++    def __init__(self, header_rows=None):
++        super().__init__(delimiter_pad=None, bookend=False, header_rows=header_rows)
+ 
+     def write(self, lines):
+         lines = super().write(lines)
+-        lines = [lines[1]] + lines + [lines[1]]
++        if self.header_rows:
++            header_lines = self.header_rows
++            lines = header_lines + [lines[1]] + lines + [lines[1]]
++        else:
++            lines = [lines[1]] + lines + [lines[1]]
+         return lines
+diff --git a/astropy/io/ascii/ui.py b/astropy/io/ascii/ui.py
+index 993dacf51..204cf3570 100644
+--- a/astropy/io/ascii/ui.py
++++ b/astropy/io/ascii/ui.py
+@@ -972,7 +972,8 @@ def write(
+         fast_writer = False
+ 
+     Writer = _get_format_class(format, Writer, "Writer")
+-    writer = get_writer(Writer=Writer, fast_writer=fast_writer, **kwargs)
++    header_rows = kwargs.pop('header_rows', None)
++    writer = get_writer(Writer=Writer, fast_writer=fast_writer, header_rows=header_rows, **kwargs)
+     if writer._format_name in core.FAST_CLASSES:
+         writer.write(table, output)
+         return

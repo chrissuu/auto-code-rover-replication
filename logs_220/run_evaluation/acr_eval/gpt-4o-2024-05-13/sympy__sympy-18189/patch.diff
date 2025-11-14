@@ -1,0 +1,38 @@
+diff --git a/sympy/solvers/diophantine.py b/sympy/solvers/diophantine.py
+index 6092e35dab..8905e95b69 100644
+--- a/sympy/solvers/diophantine.py
++++ b/sympy/solvers/diophantine.py
+@@ -179,10 +179,29 @@ def diophantine(eq, param=symbols("t", integer=True), syms=None,
+                 raise TypeError(
+                     'syms should be given as a sequence, e.g. a list')
+             syms = [i for i in syms if i in var]
+-            if syms != var:
+-                dict_sym_index = dict(zip(syms, range(len(syms))))
+-                return {tuple([t[dict_sym_index[i]] for i in var])
+-                            for t in diophantine(eq, param)}
++            if set(syms) != set(var):
++                raise ValueError("The symbols in 'syms' must match the variables in the equation.")
++            dict_sym_index = dict(zip(syms, range(len(syms))))
++            reordered_solutions = {tuple([t[dict_sym_index[i]] for i in var])
++                                   for t in diophantine(eq, param)}
++            if permute:
++                final_soln = set()
++                for sol in reordered_solutions:
++                    if do_permute_signs:
++                        permuted_sign = set(permute_signs(sol))
++                        final_soln.update(permuted_sign)
++                    elif permute_few_signs:
++                        lst = list(permute_signs(sol))
++                        lst = list(filter(lambda x: x[0]*x[1] == sol[1]*sol[0], lst))
++                        permuted_sign = set(lst)
++                        final_soln.update(permuted_sign)
++                    elif do_permute_signs_var:
++                        permuted_sign_var = set(signed_permutations(sol))
++                        final_soln.update(permuted_sign_var)
++                    else:
++                        final_soln.add(sol)
++                return final_soln
++            return reordered_solutions
+         n, d = eq.as_numer_denom()
+         if n.is_number:
+             return set()

@@ -1,0 +1,13 @@
+diff --git a/sympy/vector/vector.py b/sympy/vector/vector.py
+index c62b1dbf0d..ff9871d486 100755
+--- a/sympy/vector/vector.py
++++ b/sympy/vector/vector.py
+@@ -350,7 +350,7 @@ def __new__(cls, index, system, pretty_str=None, latex_str=None):
+         obj._components = {obj: S(1)}
+         obj._measure_number = S(1)
+         obj._name = system._name + '.' + name
+-        obj._pretty_form = u'' + pretty_str
++        obj._pretty_form = u' ' + pretty_str + ' '
+         obj._latex_form = latex_str
+         obj._system = system
+ 

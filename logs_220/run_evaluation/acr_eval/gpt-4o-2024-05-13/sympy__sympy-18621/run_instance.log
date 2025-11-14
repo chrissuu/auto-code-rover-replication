@@ -1,0 +1,47 @@
+2025-11-13 06:24:59,078 - INFO - Creating container for sympy__sympy-18621...
+2025-11-13 06:24:59,987 - INFO - Container for sympy__sympy-18621 created: 04651d2e5c28a754a6830ba6e3d190709cd5eb86d064e68f2fdf64aca443aff8
+2025-11-13 06:25:00,136 - INFO - Container for sympy__sympy-18621 started: 04651d2e5c28a754a6830ba6e3d190709cd5eb86d064e68f2fdf64aca443aff8
+2025-11-13 06:25:00,136 - INFO - Intermediate patch for sympy__sympy-18621 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-18621/patch.diff, now applying to container...
+2025-11-13 06:25:00,274 - INFO - >>>>> Applied Patch:
+Checking patch sympy/matrices/expressions/blockmatrix.py...
+Applied patch sympy/matrices/expressions/blockmatrix.py cleanly.
+
+2025-11-13 06:25:00,737 - INFO - Git diff before:
+diff --git a/sympy/matrices/expressions/blockmatrix.py b/sympy/matrices/expressions/blockmatrix.py
+index 11aebbc59f..5fe308e991 100644
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -298,6 +298,8 @@ def diag(self):
+     def blocks(self):
+         from sympy.matrices.immutable import ImmutableDenseMatrix
+         mats = self.args
++        if len(mats) == 1:
++            return mats[0]
+         data = [[mats[i] if i == j else ZeroMatrix(mats[i].rows, mats[j].cols)
+                         for j in range(len(mats))]
+                         for i in range(len(mats))]
+2025-11-13 06:25:00,737 - INFO - Eval script for sympy__sympy-18621 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-18621/eval.sh; copying to container...
+2025-11-13 06:25:05,712 - INFO - Test runtime: 4.91 seconds
+2025-11-13 06:25:05,713 - INFO - Test output for sympy__sympy-18621 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-18621/test_output.txt
+2025-11-13 06:25:05,776 - INFO - Git diff after:
+diff --git a/sympy/matrices/expressions/blockmatrix.py b/sympy/matrices/expressions/blockmatrix.py
+index 11aebbc59f..5fe308e991 100644
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -298,6 +298,8 @@ def diag(self):
+     def blocks(self):
+         from sympy.matrices.immutable import ImmutableDenseMatrix
+         mats = self.args
++        if len(mats) == 1:
++            return mats[0]
+         data = [[mats[i] if i == j else ZeroMatrix(mats[i].rows, mats[j].cols)
+                         for j in range(len(mats))]
+                         for i in range(len(mats))]
+2025-11-13 06:25:05,777 - INFO - Grading answer for sympy__sympy-18621...
+2025-11-13 06:25:05,777 - INFO - report: {'sympy__sympy-18621': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_issue_18618']}, 'PASS_TO_PASS': {'success': ['test_bc_matmul', 'test_bc_matadd', 'test_bc_transpose', 'test_bc_dist_diag', 'test_block_plus_ident', 'test_BlockMatrix', 'test_block_collapse_explicit_matrices', 'test_issue_17624', 'test_BlockMatrix_trace', 'test_BlockMatrix_Determinant', 'test_squareBlockMatrix', 'test_BlockDiagMatrix', 'test_blockcut', 'test_reblock_2x2', 'test_deblock'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-18621: resolved: False
+2025-11-13 06:25:05,777 - INFO - Attempting to stop container sweb.eval.sympy__sympy-18621.acr_eval...
+2025-11-13 06:25:20,954 - INFO - Attempting to remove container sweb.eval.sympy__sympy-18621.acr_eval...
+2025-11-13 06:25:20,989 - INFO - Container sweb.eval.sympy__sympy-18621.acr_eval removed.
+2025-11-13 06:25:20,989 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-18621:latest...
+2025-11-13 06:25:21,110 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-18621:latest removed.

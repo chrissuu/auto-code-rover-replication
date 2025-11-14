@@ -1,0 +1,20 @@
+diff --git a/sympy/simplify/trigsimp.py b/sympy/simplify/trigsimp.py
+index 7ca05f0304..7146e3d4ad 100644
+--- a/sympy/simplify/trigsimp.py
++++ b/sympy/simplify/trigsimp.py
+@@ -1117,10 +1117,15 @@ def _futrig(e, **kwargs):
+         TR8, TR6, TR15, TR16, TR111, TR5, TRmorrie, TR11, TR14, TR22,
+         TR12)
+     from sympy.core.compatibility import _nodes
++    from sympy import Abs
+ 
+     if not e.has(TrigonometricFunction):
+         return e
+ 
++    # Handle sqrt(sin(x)**2) for complex x
++    e = e.replace(lambda expr: expr.is_Pow and expr.exp == S.Half and expr.base.is_Pow and expr.base.exp == 2 and expr.base.base.func == sin,
++                  lambda expr: Abs(expr.base.base))
++
+     if e.is_Mul:
+         coeff, e = e.as_independent(TrigonometricFunction)
+     else:

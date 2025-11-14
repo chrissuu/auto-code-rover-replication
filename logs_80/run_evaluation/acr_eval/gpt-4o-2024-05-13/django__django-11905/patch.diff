@@ -1,0 +1,15 @@
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+index ea51912e8b..bfaedcbbf2 100644
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1163,6 +1163,10 @@ class Query(BaseExpression):
+             if not lookup_class:
+                 return
+ 
++        # Add validation for __isnull lookup
++        if lookup_name == 'isnull' and not isinstance(rhs, bool):
++            raise ValueError("The '__isnull' lookup value must be a boolean.")
++
+         lookup = lookup_class(lhs, rhs)
+         # Interpret '__exact=None' as the sql 'is NULL'; otherwise, reject all
+         # uses of None as a query value unless the lookup supports it.

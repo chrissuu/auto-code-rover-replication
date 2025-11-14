@@ -1,0 +1,26 @@
+diff --git a/django/forms/widgets.py b/django/forms/widgets.py
+index 02aa32b207..c1dbc120b7 100644
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -128,16 +128,17 @@ class Media:
+         # Start with a copy of list_1.
+         combined_list = list(list_1)
+         last_insert_index = len(list_1)
++        # Track positions of elements to avoid unnecessary warnings
++        positions = {path: idx for idx, path in enumerate(combined_list)}
+         # Walk list_2 in reverse, inserting each element into combined_list if
+         # it doesn't already exist.
+         for path in reversed(list_2):
+-            try:
+-                # Does path already exist in the list?
+-                index = combined_list.index(path)
+-            except ValueError:
++            if path not in positions:
+                 # Add path to combined_list since it doesn't exist.
+                 combined_list.insert(last_insert_index, path)
++                positions[path] = last_insert_index
+             else:
++                index = positions[path]
+                 if index > last_insert_index:
+                     warnings.warn(
+                         'Detected duplicate Media files in an opposite order:\n'

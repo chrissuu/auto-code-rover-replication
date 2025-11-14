@@ -1,0 +1,34 @@
+diff --git a/src/_pytest/assertion/rewrite.py b/src/_pytest/assertion/rewrite.py
+index f50d8200e..435b0d503 100644
+--- a/src/_pytest/assertion/rewrite.py
++++ b/src/_pytest/assertion/rewrite.py
+@@ -385,6 +385,11 @@ def _format_boolop(explanations, is_or):
+ 
+ 
+ def _call_reprcompare(ops, results, expls, each_obj):
++    def format_byte_string(obj):
++        if isinstance(obj, bytes):
++            return repr(obj)
++        return obj
++
+     for i, res, expl in zip(range(len(ops)), results, expls):
+         try:
+             done = not res
+@@ -396,7 +401,16 @@ def _call_reprcompare(ops, results, expls, each_obj):
+         custom = util._reprcompare(ops[i], each_obj[i], each_obj[i + 1])
+         if custom is not None:
+             return custom
+-    return expl
++
++    # Handle byte string comparisons explicitly
++    formatted_expl = expl
++    if isinstance(each_obj[i], bytes) or isinstance(each_obj[i + 1], bytes):
++        formatted_expl = "{} {} {}".format(
++            format_byte_string(each_obj[i]),
++            ops[i],
++            format_byte_string(each_obj[i + 1])
++        )
++    return formatted_expl
+ 
+ 
+ unary_map = {ast.Not: "not %s", ast.Invert: "~%s", ast.USub: "-%s", ast.UAdd: "+%s"}

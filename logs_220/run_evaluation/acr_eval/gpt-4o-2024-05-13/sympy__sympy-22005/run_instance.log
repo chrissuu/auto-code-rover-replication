@@ -1,0 +1,42 @@
+2025-11-13 06:27:03,879 - INFO - Creating container for sympy__sympy-22005...
+2025-11-13 06:27:04,836 - INFO - Container for sympy__sympy-22005 created: ec323ac9e2b0e53ff499dfebe64a46a2a6b8628be2a792e750cccf7fa9da8821
+2025-11-13 06:27:05,023 - INFO - Container for sympy__sympy-22005 started: ec323ac9e2b0e53ff499dfebe64a46a2a6b8628be2a792e750cccf7fa9da8821
+2025-11-13 06:27:05,024 - INFO - Intermediate patch for sympy__sympy-22005 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-22005/patch.diff, now applying to container...
+2025-11-13 06:27:05,135 - INFO - Failed to apply patch to container: git apply --verbose
+2025-11-13 06:27:05,199 - INFO - Failed to apply patch to container: git apply --verbose --reject
+2025-11-13 06:27:05,247 - INFO - >>>>> Applied Patch:
+patching file sympy/solvers/polysys.py
+Reversed (or previously applied) patch detected!  Assuming -R.
+patching file sympy/solvers/tests/test_polysys.py
+Hunk #1 succeeded at 48 with fuzz 2.
+
+2025-11-13 06:27:05,786 - INFO - Git diff before:
+diff --git a/sympy/solvers/tests/test_polysys.py b/sympy/solvers/tests/test_polysys.py
+index 58419f8762..9e674a6fe6 100644
+--- a/sympy/solvers/tests/test_polysys.py
++++ b/sympy/solvers/tests/test_polysys.py
+@@ -48,6 +48,10 @@ def test_solve_poly_system():
+     raises(NotImplementedError, lambda: solve_poly_system(
+         [z, -2*x*y**2 + x + y**2*z, y**2*(-z - 4) + 2]))
+     raises(PolynomialError, lambda: solve_poly_system([1/x], x))
++    raises(NotImplementedError, lambda: solve_poly_system(
++        Poly(x - 1, x, y), (x, y)))
++    raises(NotImplementedError, lambda: solve_poly_system(
++        Poly(y - 1, x, y), (x, y)))
+ 
+ 
+ def test_solve_biquadratic():
+2025-11-13 06:27:05,786 - INFO - Eval script for sympy__sympy-22005 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-22005/eval.sh; copying to container...
+2025-11-13 06:27:15,169 - INFO - Test runtime: 9.32 seconds
+2025-11-13 06:27:15,169 - INFO - Test output for sympy__sympy-22005 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-22005/test_output.txt
+2025-11-13 06:27:15,227 - INFO - Git diff after:
+
+2025-11-13 06:27:15,227 - INFO - Git diff changed after running eval script
+2025-11-13 06:27:15,227 - INFO - Grading answer for sympy__sympy-22005...
+2025-11-13 06:27:15,227 - INFO - report: {'sympy__sympy-22005': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_solve_poly_system']}, 'PASS_TO_PASS': {'success': ['test_solve_biquadratic', 'test_solve_triangulated'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-22005: resolved: False
+2025-11-13 06:27:15,227 - INFO - Attempting to stop container sweb.eval.sympy__sympy-22005.acr_eval...
+2025-11-13 06:27:30,692 - INFO - Attempting to remove container sweb.eval.sympy__sympy-22005.acr_eval...
+2025-11-13 06:27:30,728 - INFO - Container sweb.eval.sympy__sympy-22005.acr_eval removed.
+2025-11-13 06:27:30,728 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-22005:latest...
+2025-11-13 06:27:30,839 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-22005:latest removed.

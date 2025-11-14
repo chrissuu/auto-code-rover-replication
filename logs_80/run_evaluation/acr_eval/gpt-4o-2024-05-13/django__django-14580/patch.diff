@@ -1,0 +1,15 @@
+diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py
+index 4918261fb0..0194813dcc 100644
+--- a/django/db/migrations/writer.py
++++ b/django/db/migrations/writer.py
+@@ -162,6 +162,10 @@ class MigrationWriter:
+                 imports.remove(line)
+                 self.needs_manual_porting = True
+ 
++        # Ensure models import is added if used in operations or dependencies
++        if any("models." in op for op in operations) or any("models." in dep for dep in dependencies):
++            imports.add("from django.db import models")
++
+         # django.db.migrations is always used, but models import may not be.
+         # If models import exists, merge it with migrations import.
+         if "from django.db import models" in imports:

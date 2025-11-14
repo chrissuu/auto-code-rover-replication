@@ -1,0 +1,16 @@
+diff --git a/sklearn/preprocessing/_encoders.py b/sklearn/preprocessing/_encoders.py
+index 1e05aba59..7163f2072 100644
+--- a/sklearn/preprocessing/_encoders.py
++++ b/sklearn/preprocessing/_encoders.py
+@@ -562,6 +562,11 @@ class OneHotEncoder(_BaseEncoder):
+ 
+         n_samples, n_features = X.shape
+ 
++        # Check the size of the elements in the array and cast to objects if necessary
++        max_category_length = max(len(cat) for cats in self.categories_ for cat in cats)
++        if any(len(str(x)) < max_category_length for x in X.ravel()):
++            X = check_array(X, dtype=np.object)
++
+         X_int, X_mask = self._transform(X, handle_unknown=self.handle_unknown)
+ 
+         mask = X_mask.ravel()

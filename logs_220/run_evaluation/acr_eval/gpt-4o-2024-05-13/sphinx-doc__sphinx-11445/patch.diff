@@ -1,0 +1,24 @@
+diff --git a/sphinx/util/rst.py b/sphinx/util/rst.py
+index 7a1538325..9b066c155 100644
+--- a/sphinx/util/rst.py
++++ b/sphinx/util/rst.py
+@@ -90,6 +90,19 @@ def prepend_prolog(content: StringList, prolog: str) -> None:
+             content.insert(pos, '', '<generated>', 0)
+             pos += 1
+ 
++        # Check if the first line is a domain directive heading
++        if content and content[0].startswith(':') and content[0].endswith(':'):
++            # Insert prolog after the first heading
++            for i, line in enumerate(content):
++                if line.strip() == '':
++                    pos = i + 1
++                    break
++            else:
++                pos = len(content)
++        else:
++            # Insert prolog at the beginning
++            pos = 0
++
+         # insert prolog (after docinfo if exists)
+         for lineno, line in enumerate(prolog.splitlines()):
+             content.insert(pos + lineno, line, '<rst_prolog>', lineno)

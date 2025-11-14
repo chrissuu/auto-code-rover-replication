@@ -1,0 +1,55 @@
+2025-11-13 06:26:17,218 - INFO - Creating container for sympy__sympy-20590...
+2025-11-13 06:26:17,710 - INFO - Container for sympy__sympy-20590 created: c5bdbed17c6520fa3963f9717b0d8accf9e001cd2339aa0261182a04ecfd34e9
+2025-11-13 06:26:17,870 - INFO - Container for sympy__sympy-20590 started: c5bdbed17c6520fa3963f9717b0d8accf9e001cd2339aa0261182a04ecfd34e9
+2025-11-13 06:26:17,870 - INFO - Intermediate patch for sympy__sympy-20590 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-20590/patch.diff, now applying to container...
+2025-11-13 06:26:18,021 - INFO - >>>>> Applied Patch:
+Checking patch sympy/core/symbol.py...
+Applied patch sympy/core/symbol.py cleanly.
+
+2025-11-13 06:26:18,551 - INFO - Git diff before:
+diff --git a/sympy/core/symbol.py b/sympy/core/symbol.py
+index 70e6953559..b037969d04 100644
+--- a/sympy/core/symbol.py
++++ b/sympy/core/symbol.py
+@@ -347,6 +347,12 @@ def free_symbols(self):
+     def as_set(self):
+         return S.UniversalSet
+ 
++    # Ensure that __dict__ is not created
++    def __setattr__(self, key, value):
++        if not hasattr(self, '__slots__'):
++            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{key}'")
++        super(Symbol, self).__setattr__(key, value)
++
+ 
+ class Dummy(Symbol):
+     """Dummy symbols are each unique, even if they have the same name:
+2025-11-13 06:26:18,551 - INFO - Eval script for sympy__sympy-20590 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-20590/eval.sh; copying to container...
+2025-11-13 06:26:23,866 - INFO - Test runtime: 5.26 seconds
+2025-11-13 06:26:23,866 - INFO - Test output for sympy__sympy-20590 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-20590/test_output.txt
+2025-11-13 06:26:23,923 - INFO - Git diff after:
+diff --git a/sympy/core/symbol.py b/sympy/core/symbol.py
+index 70e6953559..b037969d04 100644
+--- a/sympy/core/symbol.py
++++ b/sympy/core/symbol.py
+@@ -347,6 +347,12 @@ def free_symbols(self):
+     def as_set(self):
+         return S.UniversalSet
+ 
++    # Ensure that __dict__ is not created
++    def __setattr__(self, key, value):
++        if not hasattr(self, '__slots__'):
++            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{key}'")
++        super(Symbol, self).__setattr__(key, value)
++
+ 
+ class Dummy(Symbol):
+     """Dummy symbols are each unique, even if they have the same name:
+2025-11-13 06:26:23,923 - INFO - Grading answer for sympy__sympy-20590...
+2025-11-13 06:26:23,924 - INFO - report: {'sympy__sympy-20590': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_immutable']}, 'PASS_TO_PASS': {'success': ['test__aresame', 'test_structure', 'test_equality', 'test_matches_basic', 'test_has', 'test_subs', 'test_subs_with_unicode_symbols', 'test_atoms', 'test_free_symbols_empty', 'test_doit', 'test_S', 'test_xreplace', 'test_preorder_traversal', 'test_sorted_args', 'test_call', 'test_rewrite', 'test_literal_evalf_is_number_is_zero_is_comparable', 'test_as_Basic', 'test_atomic', 'test_as_dummy', 'test_canonical_variables'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-20590: resolved: False
+2025-11-13 06:26:23,924 - INFO - Attempting to stop container sweb.eval.sympy__sympy-20590.acr_eval...
+2025-11-13 06:26:39,084 - INFO - Attempting to remove container sweb.eval.sympy__sympy-20590.acr_eval...
+2025-11-13 06:26:39,119 - INFO - Container sweb.eval.sympy__sympy-20590.acr_eval removed.
+2025-11-13 06:26:39,119 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-20590:latest...
+2025-11-13 06:26:39,194 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-20590:latest removed.

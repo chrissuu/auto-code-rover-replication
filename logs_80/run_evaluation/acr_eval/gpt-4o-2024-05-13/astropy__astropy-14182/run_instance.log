@@ -1,0 +1,95 @@
+2025-11-13 01:22:50,316 - INFO - Creating container for astropy__astropy-14182...
+2025-11-13 01:22:52,162 - INFO - Container for astropy__astropy-14182 created: 5f42e21bc427829dfde91f9bccb840a0d3b5732dff8f59bceeae613eb67a6031
+2025-11-13 01:22:52,388 - INFO - Container for astropy__astropy-14182 started: 5f42e21bc427829dfde91f9bccb840a0d3b5732dff8f59bceeae613eb67a6031
+2025-11-13 01:22:52,388 - INFO - Intermediate patch for astropy__astropy-14182 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/astropy__astropy-14182/patch.diff, now applying to container...
+2025-11-13 01:22:52,525 - INFO - >>>>> Applied Patch:
+Checking patch astropy/io/ascii/rst.py...
+Checking patch astropy/io/ascii/ui.py...
+Applied patch astropy/io/ascii/rst.py cleanly.
+Applied patch astropy/io/ascii/ui.py cleanly.
+
+2025-11-13 01:22:53,147 - INFO - Git diff before:
+diff --git a/astropy/io/ascii/rst.py b/astropy/io/ascii/rst.py
+index abdeba8ef..097355426 100644
+--- a/astropy/io/ascii/rst.py
++++ b/astropy/io/ascii/rst.py
+@@ -57,10 +57,14 @@ class RST(FixedWidth):
+     data_class = SimpleRSTData
+     header_class = SimpleRSTHeader
+ 
+-    def __init__(self):
+-        super().__init__(delimiter_pad=None, bookend=False)
++    def __init__(self, header_rows=None):
++        super().__init__(delimiter_pad=None, bookend=False, header_rows=header_rows)
+ 
+     def write(self, lines):
+         lines = super().write(lines)
+-        lines = [lines[1]] + lines + [lines[1]]
++        if self.header_rows:
++            header_lines = self.header_rows
++            lines = header_lines + [lines[1]] + lines + [lines[1]]
++        else:
++            lines = [lines[1]] + lines + [lines[1]]
+         return lines
+diff --git a/astropy/io/ascii/ui.py b/astropy/io/ascii/ui.py
+index 993dacf51..204cf3570 100644
+--- a/astropy/io/ascii/ui.py
++++ b/astropy/io/ascii/ui.py
+@@ -972,7 +972,8 @@ def write(
+         fast_writer = False
+ 
+     Writer = _get_format_class(format, Writer, "Writer")
+-    writer = get_writer(Writer=Writer, fast_writer=fast_writer, **kwargs)
++    header_rows = kwargs.pop('header_rows', None)
++    writer = get_writer(Writer=Writer, fast_writer=fast_writer, header_rows=header_rows, **kwargs)
+     if writer._format_name in core.FAST_CLASSES:
+         writer.write(table, output)
+         return
+2025-11-13 01:22:53,147 - INFO - Eval script for astropy__astropy-14182 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/astropy__astropy-14182/eval.sh; copying to container...
+2025-11-13 01:24:30,222 - INFO - Test runtime: 97.00 seconds
+2025-11-13 01:24:30,223 - INFO - Test output for astropy__astropy-14182 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/astropy__astropy-14182/test_output.txt
+2025-11-13 01:24:30,287 - INFO - Git diff after:
+diff --git a/astropy/io/ascii/rst.py b/astropy/io/ascii/rst.py
+index abdeba8ef..097355426 100644
+--- a/astropy/io/ascii/rst.py
++++ b/astropy/io/ascii/rst.py
+@@ -57,10 +57,14 @@ class RST(FixedWidth):
+     data_class = SimpleRSTData
+     header_class = SimpleRSTHeader
+ 
+-    def __init__(self):
+-        super().__init__(delimiter_pad=None, bookend=False)
++    def __init__(self, header_rows=None):
++        super().__init__(delimiter_pad=None, bookend=False, header_rows=header_rows)
+ 
+     def write(self, lines):
+         lines = super().write(lines)
+-        lines = [lines[1]] + lines + [lines[1]]
++        if self.header_rows:
++            header_lines = self.header_rows
++            lines = header_lines + [lines[1]] + lines + [lines[1]]
++        else:
++            lines = [lines[1]] + lines + [lines[1]]
+         return lines
+diff --git a/astropy/io/ascii/ui.py b/astropy/io/ascii/ui.py
+index 993dacf51..204cf3570 100644
+--- a/astropy/io/ascii/ui.py
++++ b/astropy/io/ascii/ui.py
+@@ -972,7 +972,8 @@ def write(
+         fast_writer = False
+ 
+     Writer = _get_format_class(format, Writer, "Writer")
+-    writer = get_writer(Writer=Writer, fast_writer=fast_writer, **kwargs)
++    header_rows = kwargs.pop('header_rows', None)
++    writer = get_writer(Writer=Writer, fast_writer=fast_writer, header_rows=header_rows, **kwargs)
+     if writer._format_name in core.FAST_CLASSES:
+         writer.write(table, output)
+         return
+2025-11-13 01:24:30,287 - INFO - Grading answer for astropy__astropy-14182...
+2025-11-13 01:24:30,292 - INFO - report: {'astropy__astropy-14182': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['astropy/io/ascii/tests/test_rst.py::test_rst_with_header_rows']}, 'PASS_TO_PASS': {'success': ['astropy/io/ascii/tests/test_rst.py::test_read_normal', 'astropy/io/ascii/tests/test_rst.py::test_read_normal_names', 'astropy/io/ascii/tests/test_rst.py::test_read_normal_names_include', 'astropy/io/ascii/tests/test_rst.py::test_read_normal_exclude', 'astropy/io/ascii/tests/test_rst.py::test_read_unbounded_right_column', 'astropy/io/ascii/tests/test_rst.py::test_read_unbounded_right_column_header', 'astropy/io/ascii/tests/test_rst.py::test_read_right_indented_table', 'astropy/io/ascii/tests/test_rst.py::test_trailing_spaces_in_row_definition'], 'failure': ['astropy/io/ascii/tests/test_rst.py::test_write_normal']}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for astropy__astropy-14182: resolved: False
+2025-11-13 01:24:30,292 - INFO - Attempting to stop container sweb.eval.astropy__astropy-14182.acr_eval...
+2025-11-13 01:24:45,446 - INFO - Attempting to remove container sweb.eval.astropy__astropy-14182.acr_eval...
+2025-11-13 01:24:45,477 - INFO - Container sweb.eval.astropy__astropy-14182.acr_eval removed.
+2025-11-13 01:24:45,477 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.astropy_1776_astropy-14182:latest...
+2025-11-13 01:24:46,825 - INFO - Image swebench/sweb.eval.x86_64.astropy_1776_astropy-14182:latest removed.

@@ -1,0 +1,57 @@
+diff --git a/lib/matplotlib/axis.py b/lib/matplotlib/axis.py
+index af0815d41d..8c8938f908 100644
+--- a/lib/matplotlib/axis.py
++++ b/lib/matplotlib/axis.py
+@@ -1987,19 +1987,21 @@ class Axis(martist.Artist):
+             self.set_major_locator(mticker.FixedLocator(ticks))
+             return self.get_major_ticks(len(ticks))
+ 
++    from matplotlib.text import Text
++    
+     def set_ticks(self, ticks, labels=None, *, minor=False, **kwargs):
+         """
+         Set this Axis' tick locations and optionally labels.
+-
++    
+         If necessary, the view limits of the Axis are expanded so that all
+         given ticks are visible.
+-
++    
+         Parameters
+         ----------
+         ticks : list of floats
+             List of tick locations.  The axis `.Locator` is replaced by a
+             `~.ticker.FixedLocator`.
+-
++    
+             Some tick formatters will not label arbitrary tick positions;
+             e.g. log formatters only label decade ticks by default. In
+             such a case you can set a formatter explicitly on the axis
+@@ -2013,7 +2015,7 @@ class Axis(martist.Artist):
+         **kwargs
+             `.Text` properties for the labels. These take effect only if you
+             pass *labels*. In other cases, please use `~.Axes.tick_params`.
+-
++    
+         Notes
+         -----
+         The mandatory expansion of the view limits is an intentional design
+@@ -2021,9 +2023,18 @@ class Axis(martist.Artist):
+         other limits, you should set the limits explicitly after setting the
+         ticks.
+         """
++        # Validate kwargs
++        if kwargs:
++            valid_text_kwargs = Text().properties()
++            for kwarg in kwargs:
++                if kwarg not in valid_text_kwargs:
++                    raise TypeError(f"'{kwarg}' is not a valid Text property")
++    
+         result = self._set_tick_locations(ticks, minor=minor)
+         if labels is not None:
+             self.set_ticklabels(labels, minor=minor, **kwargs)
++        elif kwargs:
++            raise ValueError("kwargs can only be used if labels are provided")
+         return result
+ 
+     def _get_tick_boxes_siblings(self, renderer):

@@ -1,0 +1,17 @@
+diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py
+index 25c3b44250..dce78b9a25 100644
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -362,6 +362,12 @@ class StatReloader(BaseReloader):
+             except OSError:
+                 # This is thrown when the file does not exist.
+                 continue
++            except ValueError as e:
++                if 'embedded null byte' in str(e):
++                    logger.warning(f"Skipping file due to embedded null byte: {file}")
++                    continue
++                else:
++                    raise e
+             seen_files.add(file)
+             yield file, mtime
+ 

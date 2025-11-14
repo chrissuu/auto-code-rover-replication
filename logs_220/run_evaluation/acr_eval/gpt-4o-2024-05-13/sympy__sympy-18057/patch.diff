@@ -1,0 +1,41 @@
+diff --git a/sympy/core/expr.py b/sympy/core/expr.py
+index 24d89897f7..3e5709b570 100644
+--- a/sympy/core/expr.py
++++ b/sympy/core/expr.py
+@@ -121,7 +121,7 @@ def _hashable_content(self):
+ 
+     def __eq__(self, other):
+         try:
+-            other = sympify(other)
++            other = sympify(other, strict=True)
+             if not isinstance(other, Expr):
+                 return False
+         except (SympifyError, SyntaxError):
+diff --git a/sympy/core/sympify.py b/sympy/core/sympify.py
+index ed4ea6ce5e..f9c9891683 100644
+--- a/sympy/core/sympify.py
++++ b/sympy/core/sympify.py
+@@ -284,6 +284,9 @@ def sympify(a, locals=None, convert_xor=True, strict=False, rational=False,
+     if cls is type(None):
+         if strict:
+             raise SympifyError(a)
++        
++        if isinstance(a, string_types):
++            raise SympifyError('String input not allowed in strict mode')
+         else:
+             return a
+ 
+diff --git a/sympy/parsing/sympy_parser.py b/sympy/parsing/sympy_parser.py
+index 2ab43d9b31..83e104468b 100644
+--- a/sympy/parsing/sympy_parser.py
++++ b/sympy/parsing/sympy_parser.py
+@@ -899,6 +899,9 @@ def eval_expr(code, local_dict, global_dict):
+ 
+     Generally, ``parse_expr`` should be used.
+     """
++    if not isinstance(code, str):
++        raise ValueError("Code to evaluate must be a string")
++    
+     expr = eval(
+         code, global_dict, local_dict)  # take local objects in preference
+ 

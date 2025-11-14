@@ -1,0 +1,73 @@
+2025-11-13 01:29:22,999 - INFO - Creating container for django__django-12113...
+2025-11-13 01:29:25,434 - INFO - Container for django__django-12113 created: 8a93cb3b7e14b604f9a0aa764484f7e2e2519289abd3dc2dcfd44c27ea93810d
+2025-11-13 01:29:25,619 - INFO - Container for django__django-12113 started: 8a93cb3b7e14b604f9a0aa764484f7e2e2519289abd3dc2dcfd44c27ea93810d
+2025-11-13 01:29:25,620 - INFO - Intermediate patch for django__django-12113 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-12113/patch.diff, now applying to container...
+2025-11-13 01:29:25,753 - INFO - >>>>> Applied Patch:
+Checking patch tests/admin_views/test_multidb.py...
+Applied patch tests/admin_views/test_multidb.py cleanly.
+
+2025-11-13 01:29:26,622 - INFO - Git diff before:
+diff --git a/tests/admin_views/test_multidb.py b/tests/admin_views/test_multidb.py
+index a02b637d34..86d7cca86c 100644
+--- a/tests/admin_views/test_multidb.py
++++ b/tests/admin_views/test_multidb.py
+@@ -35,13 +35,14 @@ class MultiDatabaseTests(TestCase):
+         cls.superusers = {}
+         cls.test_book_ids = {}
+         for db in connections:
+-            Router.target_db = db
+-            cls.superusers[db] = User.objects.create_superuser(
+-                username='admin', password='something', email='test@test.org',
+-            )
+-            b = Book(name='Test Book')
+-            b.save(using=db)
+-            cls.test_book_ids[db] = b.id
++            with transaction.atomic(using=db):
++                Router.target_db = db
++                cls.superusers[db] = User.objects.create_superuser(
++                    username='admin', password='something', email='test@test.org',
++                )
++                b = Book(name='Test Book')
++                b.save(using=db)
++                cls.test_book_ids[db] = b.id
+ 
+     @mock.patch('django.contrib.admin.options.transaction')
+     def test_add_view(self, mock):
+2025-11-13 01:29:26,622 - INFO - Eval script for django__django-12113 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-12113/eval.sh; copying to container...
+2025-11-13 01:29:43,526 - INFO - Test runtime: 16.85 seconds
+2025-11-13 01:29:43,526 - INFO - Test output for django__django-12113 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-12113/test_output.txt
+2025-11-13 01:29:43,601 - INFO - Git diff after:
+diff --git a/tests/admin_views/test_multidb.py b/tests/admin_views/test_multidb.py
+index a02b637d34..86d7cca86c 100644
+--- a/tests/admin_views/test_multidb.py
++++ b/tests/admin_views/test_multidb.py
+@@ -35,13 +35,14 @@ class MultiDatabaseTests(TestCase):
+         cls.superusers = {}
+         cls.test_book_ids = {}
+         for db in connections:
+-            Router.target_db = db
+-            cls.superusers[db] = User.objects.create_superuser(
+-                username='admin', password='something', email='test@test.org',
+-            )
+-            b = Book(name='Test Book')
+-            b.save(using=db)
+-            cls.test_book_ids[db] = b.id
++            with transaction.atomic(using=db):
++                Router.target_db = db
++                cls.superusers[db] = User.objects.create_superuser(
++                    username='admin', password='something', email='test@test.org',
++                )
++                b = Book(name='Test Book')
++                b.save(using=db)
++                cls.test_book_ids[db] = b.id
+ 
+     @mock.patch('django.contrib.admin.options.transaction')
+     def test_add_view(self, mock):
+2025-11-13 01:29:43,601 - INFO - Grading answer for django__django-12113...
+2025-11-13 01:29:43,601 - INFO - report: {'django__django-12113': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_custom_test_name (backends.sqlite.test_creation.TestDbSignatureTests)']}, 'PASS_TO_PASS': {'success': [], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-12113: resolved: False
+2025-11-13 01:29:43,602 - INFO - Attempting to stop container sweb.eval.django__django-12113.acr_eval...
+2025-11-13 01:29:58,768 - INFO - Attempting to remove container sweb.eval.django__django-12113.acr_eval...
+2025-11-13 01:29:58,795 - INFO - Container sweb.eval.django__django-12113.acr_eval removed.
+2025-11-13 01:29:58,795 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.django_1776_django-12113:latest...
+2025-11-13 01:29:59,082 - INFO - Image swebench/sweb.eval.x86_64.django_1776_django-12113:latest removed.

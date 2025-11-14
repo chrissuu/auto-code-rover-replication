@@ -1,0 +1,16 @@
+diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py
+index d17232e4ec..03783aeea0 100644
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -976,7 +976,10 @@ class RenameIndex(IndexOperation):
+         )
+         self.new_name, self.old_name = self.old_name, self.new_name
+ 
+-        self.database_forwards(app_label, schema_editor, from_state, to_state)
++        # Check if the index already exists with the new name before renaming
++        model = from_state.apps.get_model(app_label, self.model_name)
++        if self.old_name in schema_editor._constraint_names(model, index=True):
++            self.database_forwards(app_label, schema_editor, from_state, to_state)
+ 
+         self.new_name_lower, self.old_name_lower = (
+             self.old_name_lower,

@@ -1,0 +1,50 @@
+diff --git a/django/forms/formsets.py b/django/forms/formsets.py
+index a89c35599f..eedf3319d7 100644
+--- a/django/forms/formsets.py
++++ b/django/forms/formsets.py
+@@ -295,7 +295,7 @@ class BaseFormSet:
+         """
+         if self._non_form_errors is None:
+             self.full_clean()
+-        return self._non_form_errors
++        return ErrorList(self._non_form_errors, error_class=self.error_class, nonform_error_class='nonform')
+ 
+     @property
+     def errors(self):
+@@ -333,7 +333,7 @@ class BaseFormSet:
+         self._non_form_errors.
+         """
+         self._errors = []
+-        self._non_form_errors = self.error_class()
++        self._non_form_errors = ErrorList(error_class=self.error_class, nonform_error_class='nonform')
+         empty_forms_count = 0
+ 
+         if not self.is_bound:  # Stop further processing.
+@@ -380,7 +380,7 @@ class BaseFormSet:
+             # Give self.clean() a chance to do cross-form validation.
+             self.clean()
+         except ValidationError as e:
+-            self._non_form_errors = self.error_class(e.error_list)
++            self._non_form_errors = ErrorList(e.error_list, error_class=self.error_class, nonform_error_class='nonform')
+ 
+     def clean(self):
+         """
+diff --git a/django/forms/utils.py b/django/forms/utils.py
+index 50412f414b..08456fe79c 100644
+--- a/django/forms/utils.py
++++ b/django/forms/utils.py
+@@ -114,9 +114,13 @@ class ErrorList(UserList, list):
+         if not self.data:
+             return ''
+ 
++        css_class = self.error_class
++        if self.nonform_error_class:
++            css_class += f" {self.nonform_error_class}"
++
+         return format_html(
+             '<ul class="{}">{}</ul>',
+-            self.error_class,
++            css_class,
+             format_html_join('', '<li>{}</li>', ((e,) for e in self))
+         )
+ 

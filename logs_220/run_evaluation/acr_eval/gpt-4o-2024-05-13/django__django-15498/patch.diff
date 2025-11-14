@@ -1,0 +1,71 @@
+diff --git a/django/utils/cache.py b/django/utils/cache.py
+index 90292ce4da..d8fa921b43 100644
+--- a/django/utils/cache.py
++++ b/django/utils/cache.py
+@@ -262,6 +262,8 @@ def _if_modified_since_passes(last_modified, if_modified_since):
+     """
+     Test the If-Modified-Since comparison as defined in section 3.3 of RFC 7232.
+     """
++    if not if_modified_since:
++        return True
+     return not last_modified or last_modified > if_modified_since
+ 
+ 
+diff --git a/django/views/static.py b/django/views/static.py
+index 1c558a53ff..36215bd33e 100644
+--- a/django/views/static.py
++++ b/django/views/static.py
+@@ -116,7 +116,7 @@ def was_modified_since(header=None, mtime=0, size=0):
+     Was something modified since the user last downloaded it?
+ 
+     header
+-      This is the value of the If-Modified-Since header.  If this is None,
++      This is the value of the If-Modified-Since header.  If this is None or empty,
+       I'll just return True.
+ 
+     mtime
+@@ -126,7 +126,7 @@ def was_modified_since(header=None, mtime=0, size=0):
+       This is the size of the item we're talking about.
+     """
+     try:
+-        if header is None:
++        if not header:
+             raise ValueError
+         matches = re.match(r"^([^;]+)(; length=([0-9]+))?$", header, re.IGNORECASE)
+         header_mtime = parse_http_date(matches[1])
+diff --git a/tests/view_tests/tests/test_static.py b/tests/view_tests/tests/test_static.py
+index 003e229859..1674911f37 100644
+--- a/tests/view_tests/tests/test_static.py
++++ b/tests/view_tests/tests/test_static.py
+@@ -95,6 +95,15 @@ class StaticTests(SimpleTestCase):
+             self.assertEqual(fp.read(), response_content)
+         self.assertEqual(len(response_content), int(response.headers["Content-Length"]))
+ 
++        # Test with empty If-Modified-Since header
++        response = self.client.get(
++            "/%s/%s" % (self.prefix, file_name), HTTP_IF_MODIFIED_SINCE=""
++        )
++        response_content = b"".join(response)
++        with open(path.join(media_dir, file_name), "rb") as fp:
++            self.assertEqual(fp.read(), response_content)
++        self.assertEqual(len(response_content), int(response.headers["Content-Length"]))
++
+     def test_invalid_if_modified_since2(self):
+         """Handle even more bogus If-Modified-Since values gracefully
+ 
+@@ -111,6 +120,15 @@ class StaticTests(SimpleTestCase):
+             self.assertEqual(fp.read(), response_content)
+         self.assertEqual(len(response_content), int(response.headers["Content-Length"]))
+ 
++        # Test with empty If-Modified-Since header
++        response = self.client.get(
++            "/%s/%s" % (self.prefix, file_name), HTTP_IF_MODIFIED_SINCE=""
++        )
++        response_content = b"".join(response)
++        with open(path.join(media_dir, file_name), "rb") as fp:
++            self.assertEqual(fp.read(), response_content)
++        self.assertEqual(len(response_content), int(response.headers["Content-Length"]))
++
+     def test_404(self):
+         response = self.client.get("/%s/nonexistent_resource" % self.prefix)
+         self.assertEqual(404, response.status_code)

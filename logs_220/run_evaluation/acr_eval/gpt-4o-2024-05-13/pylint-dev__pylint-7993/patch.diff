@@ -1,0 +1,14 @@
+diff --git a/pylint/reporters/text.py b/pylint/reporters/text.py
+index 29bd46798..aaa0327ae 100644
+--- a/pylint/reporters/text.py
++++ b/pylint/reporters/text.py
+@@ -182,7 +182,8 @@ class TextReporter(BaseReporter):
+                     f"Don't recognize the argument '{argument[0]}' in the --msg-template. "
+                     "Are you sure it is supported on the current version of pylint?"
+                 )
+-                template = re.sub(r"\{" + argument[0] + r"(:.*?)?\}", "", template)
++                # Modify the regex to handle custom braces properly
++                template = re.sub(r"\{\{\s*" + re.escape(argument[0]) + r"\s*(?::.*?)?\}\}", "", template)
+         self._fixed_template = template
+ 
+     def write_message(self, msg: Message) -> None:

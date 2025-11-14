@@ -1,0 +1,32 @@
+diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py
+index 583c2be647..cc382d4fa2 100644
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -405,6 +405,13 @@ class StatReloader(BaseReloader):
+             seen_files.add(file)
+             yield file, mtime
+ 
++    def watched_files(self):
++        files = super().watched_files()
++        base_dir = Path(settings.BASE_DIR)
++        for file in base_dir.rglob('*'):
++            files.add(file)
++        return files
++
+     @classmethod
+     def check_availability(cls):
+         return True
+@@ -529,6 +536,13 @@ class WatchmanReloader(BaseReloader):
+             # These paths need to be relative to the parent directory.
+             self._subscribe_dir(directory, [str(p.relative_to(directory)) for p in group])
+ 
++    def watched_files(self):
++        files = super().watched_files()
++        base_dir = Path(settings.BASE_DIR)
++        for file in base_dir.rglob('*'):
++            files.add(file)
++        return files
++
+     def update_watches(self):
+         try:
+             self._update_watches()

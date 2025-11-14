@@ -1,0 +1,66 @@
+2025-11-13 06:22:41,257 - INFO - Creating container for sympy__sympy-17630...
+2025-11-13 06:22:41,380 - INFO - Container for sympy__sympy-17630 created: 3060dec8b9e085a184345e2bacee07549f713ede68624ea829c650b31f3041f6
+2025-11-13 06:22:41,524 - INFO - Container for sympy__sympy-17630 started: 3060dec8b9e085a184345e2bacee07549f713ede68624ea829c650b31f3041f6
+2025-11-13 06:22:41,524 - INFO - Intermediate patch for sympy__sympy-17630 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-17630/patch.diff, now applying to container...
+2025-11-13 06:22:41,653 - INFO - >>>>> Applied Patch:
+/tmp/patch.diff:10: trailing whitespace.
+        
+Checking patch sympy/matrices/expressions/blockmatrix.py...
+Applied patch sympy/matrices/expressions/blockmatrix.py cleanly.
+warning: 1 line adds whitespace errors.
+
+2025-11-13 06:22:42,151 - INFO - Git diff before:
+diff --git a/sympy/matrices/expressions/blockmatrix.py b/sympy/matrices/expressions/blockmatrix.py
+index 95302a05ca..23ec469262 100644
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -162,9 +162,16 @@ def structurally_equal(self, other):
+             and self.colblocksizes == other.colblocksizes)
+ 
+     def _blockmul(self, other):
++        from sympy.matrices.expressions.matexpr import ZeroMatrix
++        
+         if (isinstance(other, BlockMatrix) and
+                 self.colblocksizes == other.rowblocksizes):
+-            return BlockMatrix(self.blocks*other.blocks)
++            result_blocks = self.blocks * other.blocks
++            for i in range(result_blocks.shape[0]):
++                for j in range(result_blocks.shape[1]):
++                    if result_blocks[i, j] == 0:
++                        result_blocks[i, j] = ZeroMatrix(result_blocks[i, j].shape[0], result_blocks[i, j].shape[1])
++            return BlockMatrix(result_blocks)
+ 
+         return self * other
+2025-11-13 06:22:42,151 - INFO - Eval script for sympy__sympy-17630 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-17630/eval.sh; copying to container...
+2025-11-13 06:22:47,377 - INFO - Test runtime: 5.17 seconds
+2025-11-13 06:22:47,378 - INFO - Test output for sympy__sympy-17630 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-17630/test_output.txt
+2025-11-13 06:22:47,436 - INFO - Git diff after:
+diff --git a/sympy/matrices/expressions/blockmatrix.py b/sympy/matrices/expressions/blockmatrix.py
+index 95302a05ca..23ec469262 100644
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -162,9 +162,16 @@ def structurally_equal(self, other):
+             and self.colblocksizes == other.colblocksizes)
+ 
+     def _blockmul(self, other):
++        from sympy.matrices.expressions.matexpr import ZeroMatrix
++        
+         if (isinstance(other, BlockMatrix) and
+                 self.colblocksizes == other.rowblocksizes):
+-            return BlockMatrix(self.blocks*other.blocks)
++            result_blocks = self.blocks * other.blocks
++            for i in range(result_blocks.shape[0]):
++                for j in range(result_blocks.shape[1]):
++                    if result_blocks[i, j] == 0:
++                        result_blocks[i, j] = ZeroMatrix(result_blocks[i, j].shape[0], result_blocks[i, j].shape[1])
++            return BlockMatrix(result_blocks)
+ 
+         return self * other
+2025-11-13 06:22:47,436 - INFO - Grading answer for sympy__sympy-17630...
+2025-11-13 06:22:47,436 - INFO - report: {'sympy__sympy-17630': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_issue_17624', 'test_zero_matrix_add']}, 'PASS_TO_PASS': {'success': ['test_bc_matmul', 'test_bc_matadd', 'test_bc_transpose', 'test_bc_dist_diag', 'test_block_plus_ident', 'test_BlockMatrix', 'test_block_collapse_explicit_matrices', 'test_BlockMatrix_trace', 'test_BlockMatrix_Determinant', 'test_squareBlockMatrix', 'test_BlockDiagMatrix', 'test_blockcut', 'test_reblock_2x2', 'test_deblock', 'test_sort_key', 'test_matadd_sympify', 'test_matadd_of_matrices', 'test_doit_args', 'test_generic_identity'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-17630: resolved: False
+2025-11-13 06:22:47,436 - INFO - Attempting to stop container sweb.eval.sympy__sympy-17630.acr_eval...
+2025-11-13 06:23:02,604 - INFO - Attempting to remove container sweb.eval.sympy__sympy-17630.acr_eval...
+2025-11-13 06:23:02,638 - INFO - Container sweb.eval.sympy__sympy-17630.acr_eval removed.
+2025-11-13 06:23:02,638 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-17630:latest...
+2025-11-13 06:23:02,718 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-17630:latest removed.

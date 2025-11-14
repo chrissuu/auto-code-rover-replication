@@ -1,0 +1,14 @@
+diff --git a/tests/model_fields/tests.py b/tests/model_fields/tests.py
+index a3b805409c..e30fdb3e95 100644
+--- a/tests/model_fields/tests.py
++++ b/tests/model_fields/tests.py
+@@ -172,6 +172,9 @@ class GetFieldDisplayTests(SimpleTestCase):
+         class FooBar(models.Model):
+             foo_bar = models.IntegerField(choices=[(1, 'foo'), (2, 'bar')])
+ 
++            def __str__(self):
++                return self.get_foo_bar_display()
++
+             def get_foo_bar_display(self):
+                 return 'something'
+ 

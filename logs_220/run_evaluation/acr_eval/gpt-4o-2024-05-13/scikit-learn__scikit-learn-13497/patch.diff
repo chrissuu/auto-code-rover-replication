@@ -1,0 +1,13 @@
+diff --git a/sklearn/feature_selection/mutual_info_.py b/sklearn/feature_selection/mutual_info_.py
+index d5d1b7fb5..5cf1290ac 100644
+--- a/sklearn/feature_selection/mutual_info_.py
++++ b/sklearn/feature_selection/mutual_info_.py
+@@ -255,7 +255,7 @@ def _estimate_mi(X, y, discrete_features='auto', discrete_target=False,
+         discrete_mask.fill(discrete_features)
+     else:
+         discrete_features = np.asarray(discrete_features)
+-        if discrete_features.dtype != 'bool':
++        if discrete_features.dtype.kind != 'b':
+             discrete_mask = np.zeros(n_features, dtype=bool)
+             discrete_mask[discrete_features] = True
+         else:

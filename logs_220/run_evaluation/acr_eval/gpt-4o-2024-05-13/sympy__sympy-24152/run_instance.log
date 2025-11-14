@@ -1,0 +1,57 @@
+2025-11-13 06:27:36,986 - INFO - Creating container for sympy__sympy-24152...
+2025-11-13 06:27:37,341 - INFO - Container for sympy__sympy-24152 created: 4b02e6a9e56ce6f0dbed259e33948b840ecb0684a1be9eaa7c7e4a727724abaf
+2025-11-13 06:27:37,471 - INFO - Container for sympy__sympy-24152 started: 4b02e6a9e56ce6f0dbed259e33948b840ecb0684a1be9eaa7c7e4a727724abaf
+2025-11-13 06:27:37,472 - INFO - Intermediate patch for sympy__sympy-24152 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-24152/patch.diff, now applying to container...
+2025-11-13 06:27:37,601 - INFO - >>>>> Applied Patch:
+Checking patch sympy/physics/quantum/tensorproduct.py...
+Applied patch sympy/physics/quantum/tensorproduct.py cleanly.
+
+2025-11-13 06:27:38,127 - INFO - Git diff before:
+diff --git a/sympy/physics/quantum/tensorproduct.py b/sympy/physics/quantum/tensorproduct.py
+index 78accaf295..4b2c4f020c 100644
+--- a/sympy/physics/quantum/tensorproduct.py
++++ b/sympy/physics/quantum/tensorproduct.py
+@@ -246,9 +246,10 @@ def _eval_expand_tensorproduct(self, **hints):
+             if isinstance(args[i], Add):
+                 for aa in args[i].args:
+                     tp = TensorProduct(*args[:i] + (aa,) + args[i + 1:])
+-                    if isinstance(tp, TensorProduct):
+-                        tp = tp._eval_expand_tensorproduct()
+-                    add_args.append(tp)
++                    c_part, nc_part = tp.args_cnc()  # added
++                    if len(nc_part) == 1 and isinstance(nc_part[0], TensorProduct):  # modified
++                        nc_part = (nc_part[0]._eval_expand_tensorproduct(), )  # modified
++                    add_args.append(Mul(*c_part) * Mul(*nc_part))  # modified
+                 break
+ 
+         if add_args:
+2025-11-13 06:27:38,127 - INFO - Eval script for sympy__sympy-24152 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-24152/eval.sh; copying to container...
+2025-11-13 06:27:43,004 - INFO - Test runtime: 4.82 seconds
+2025-11-13 06:27:43,005 - INFO - Test output for sympy__sympy-24152 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-24152/test_output.txt
+2025-11-13 06:27:43,067 - INFO - Git diff after:
+diff --git a/sympy/physics/quantum/tensorproduct.py b/sympy/physics/quantum/tensorproduct.py
+index 78accaf295..4b2c4f020c 100644
+--- a/sympy/physics/quantum/tensorproduct.py
++++ b/sympy/physics/quantum/tensorproduct.py
+@@ -246,9 +246,10 @@ def _eval_expand_tensorproduct(self, **hints):
+             if isinstance(args[i], Add):
+                 for aa in args[i].args:
+                     tp = TensorProduct(*args[:i] + (aa,) + args[i + 1:])
+-                    if isinstance(tp, TensorProduct):
+-                        tp = tp._eval_expand_tensorproduct()
+-                    add_args.append(tp)
++                    c_part, nc_part = tp.args_cnc()  # added
++                    if len(nc_part) == 1 and isinstance(nc_part[0], TensorProduct):  # modified
++                        nc_part = (nc_part[0]._eval_expand_tensorproduct(), )  # modified
++                    add_args.append(Mul(*c_part) * Mul(*nc_part))  # modified
+                 break
+ 
+         if add_args:
+2025-11-13 06:27:43,067 - INFO - Grading answer for sympy__sympy-24152...
+2025-11-13 06:27:43,067 - INFO - report: {'sympy__sympy-24152': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_tensor_product_expand'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_sparse_matrices', 'test_tensor_product_dagger', 'test_tensor_product_abstract', 'test_tensor_product_commutator', 'test_tensor_product_simp', 'test_issue_5923'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-24152: resolved: True
+2025-11-13 06:27:43,067 - INFO - Attempting to stop container sweb.eval.sympy__sympy-24152.acr_eval...
+2025-11-13 06:28:04,002 - INFO - Attempting to remove container sweb.eval.sympy__sympy-24152.acr_eval...
+2025-11-13 06:28:04,080 - INFO - Container sweb.eval.sympy__sympy-24152.acr_eval removed.
+2025-11-13 06:28:04,080 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-24152:latest...
+2025-11-13 06:28:04,703 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-24152:latest removed.

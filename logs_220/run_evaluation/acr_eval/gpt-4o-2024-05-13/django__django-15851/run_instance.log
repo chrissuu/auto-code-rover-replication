@@ -1,0 +1,64 @@
+2025-11-13 05:35:53,591 - INFO - Creating container for django__django-15851...
+2025-11-13 05:36:08,497 - INFO - Container for django__django-15851 created: e37eb16f95ba80f05a9d593eb6b8aa5ad872075a58c9e5b7141fe4b99270b4ec
+2025-11-13 05:36:08,735 - INFO - Container for django__django-15851 started: e37eb16f95ba80f05a9d593eb6b8aa5ad872075a58c9e5b7141fe4b99270b4ec
+2025-11-13 05:36:08,735 - INFO - Intermediate patch for django__django-15851 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-15851/patch.diff, now applying to container...
+2025-11-13 05:36:08,870 - INFO - >>>>> Applied Patch:
+/tmp/patch.diff:9: trailing whitespace.
+            
+/tmp/patch.diff:16: trailing whitespace.
+            
+Checking patch django/db/backends/postgresql/client.py...
+Applied patch django/db/backends/postgresql/client.py cleanly.
+warning: 2 lines add whitespace errors.
+
+2025-11-13 05:36:09,809 - INFO - Git diff before:
+diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py
+index 4c9bd63546..ba8f8d4322 100644
+--- a/django/db/backends/postgresql/client.py
++++ b/django/db/backends/postgresql/client.py
+@@ -58,6 +58,14 @@ class DatabaseClient(BaseDatabaseClient):
+         try:
+             # Allow SIGINT to pass to psql to abort queries.
+             signal.signal(signal.SIGINT, signal.SIG_IGN)
++            
++            # Ensure the database name is the last argument
++            settings_dict = self.connection.settings_dict
++            db_name = settings_dict['NAME']
++            if db_name in parameters:
++                parameters.remove(db_name)
++            parameters.append(db_name)
++            
+             super().runshell(parameters)
+         finally:
+             # Restore the original SIGINT handler.
+2025-11-13 05:36:09,809 - INFO - Eval script for django__django-15851 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-15851/eval.sh; copying to container...
+2025-11-13 05:36:17,999 - INFO - Test runtime: 8.13 seconds
+2025-11-13 05:36:17,999 - INFO - Test output for django__django-15851 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/django__django-15851/test_output.txt
+2025-11-13 05:36:18,074 - INFO - Git diff after:
+diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py
+index 4c9bd63546..ba8f8d4322 100644
+--- a/django/db/backends/postgresql/client.py
++++ b/django/db/backends/postgresql/client.py
+@@ -58,6 +58,14 @@ class DatabaseClient(BaseDatabaseClient):
+         try:
+             # Allow SIGINT to pass to psql to abort queries.
+             signal.signal(signal.SIGINT, signal.SIG_IGN)
++            
++            # Ensure the database name is the last argument
++            settings_dict = self.connection.settings_dict
++            db_name = settings_dict['NAME']
++            if db_name in parameters:
++                parameters.remove(db_name)
++            parameters.append(db_name)
++            
+             super().runshell(parameters)
+         finally:
+             # Restore the original SIGINT handler.
+2025-11-13 05:36:18,074 - INFO - Grading answer for django__django-15851...
+2025-11-13 05:36:18,075 - INFO - report: {'django__django-15851': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_parameters (dbshell.test_postgresql.PostgreSqlDbshellCommandTestCase)']}, 'PASS_TO_PASS': {'success': ['test_accent (dbshell.test_postgresql.PostgreSqlDbshellCommandTestCase)', 'test_basic (dbshell.test_postgresql.PostgreSqlDbshellCommandTestCase)', 'test_column (dbshell.test_postgresql.PostgreSqlDbshellCommandTestCase)', 'test_crash_password_does_not_leak (dbshell.test_postgresql.PostgreSqlDbshellCommandTestCase)', 'test_nopass (dbshell.test_postgresql.PostgreSqlDbshellCommandTestCase)', 'test_passfile (dbshell.test_postgresql.PostgreSqlDbshellCommandTestCase)', 'test_service (dbshell.test_postgresql.PostgreSqlDbshellCommandTestCase)', 'test_ssl_certificate (dbshell.test_postgresql.PostgreSqlDbshellCommandTestCase)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-15851: resolved: False
+2025-11-13 05:36:18,075 - INFO - Attempting to stop container sweb.eval.django__django-15851.acr_eval...
+2025-11-13 05:36:33,375 - INFO - Attempting to remove container sweb.eval.django__django-15851.acr_eval...
+2025-11-13 05:36:33,433 - INFO - Container sweb.eval.django__django-15851.acr_eval removed.
+2025-11-13 05:36:33,433 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.django_1776_django-15851:latest...
+2025-11-13 05:36:34,141 - INFO - Image swebench/sweb.eval.x86_64.django_1776_django-15851:latest removed.

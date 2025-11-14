@@ -1,0 +1,20 @@
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index dc413b5c2..645d63168 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1632,6 +1632,15 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:
+ 
+     def get_object_members(self, want_all: bool) -> Tuple[bool, ObjectMembers]:
+         members = get_class_members(self.object, self.objpath, self.get_attr)
++        
++        # Add logic to include annotation-only members from superclasses
++        if want_all:
++            for cls in self.object.__mro__:
++                if cls is not self.object:
++                    for name, value in getattr(cls, '__annotations__', {}).items():
++                        if name not in members:
++                            members[name] = ObjectMember(name, value, cls, True)
++
+         if not want_all:
+             if not self.options.members:
+                 return False, []  # type: ignore

@@ -1,0 +1,31 @@
+diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py
+index 84960d77e1..9a94070641 100644
+--- a/django/db/models/expressions.py
++++ b/django/db/models/expressions.py
+@@ -1055,7 +1055,8 @@ class Subquery(Expression):
+         external_cols = self.query.get_external_cols()
+         if any(col.possibly_multivalued for col in external_cols):
+             return [self]
+-        return external_cols
++        # Ensure subquery columns are correctly referenced
++        return [Ref(col.alias, col) for col in external_cols]
+ 
+ 
+ class Exists(Subquery):
+diff --git a/django/db/models/query.py b/django/db/models/query.py
+index 5fdee3ff37..648aadc149 100644
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -1109,6 +1109,12 @@ class QuerySet:
+                     clone.query.set_group_by()
+                 break
+ 
++        # Ensure subquery columns are correctly integrated into GROUP BY clause
++        if clone.query.group_by:
++            for annotation in annotations.values():
++                if isinstance(annotation, Subquery):
++                    clone.query.group_by.extend(annotation.get_group_by_cols())
++
+         return clone
+ 
+     def order_by(self, *field_names):

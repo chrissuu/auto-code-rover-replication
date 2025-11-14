@@ -1,0 +1,15 @@
+diff --git a/sklearn/cluster/_affinity_propagation.py b/sklearn/cluster/_affinity_propagation.py
+index 4806afee9..44cd18734 100644
+--- a/sklearn/cluster/_affinity_propagation.py
++++ b/sklearn/cluster/_affinity_propagation.py
+@@ -388,7 +388,9 @@ class AffinityPropagation(ClusterMixin, BaseEstimator):
+                 convergence_iter=self.convergence_iter, damping=self.damping,
+                 copy=self.copy, verbose=self.verbose, return_n_iter=True)
+ 
+-        if self.affinity != "precomputed":
++        if len(self.cluster_centers_indices_) == 0:
++            self.cluster_centers_ = np.array([])
++        elif self.affinity != "precomputed":
+             self.cluster_centers_ = X[self.cluster_centers_indices_].copy()
+ 
+         return self

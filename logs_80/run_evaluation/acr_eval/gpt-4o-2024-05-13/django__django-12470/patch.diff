@@ -1,0 +1,14 @@
+diff --git a/tests/model_inheritance_regress/models.py b/tests/model_inheritance_regress/models.py
+index 5e4c928dc9..882a45eca9 100644
+--- a/tests/model_inheritance_regress/models.py
++++ b/tests/model_inheritance_regress/models.py
+@@ -75,6 +75,9 @@ class Wholesaler(Supplier):
+ class Parent(models.Model):
+     created = models.DateTimeField(default=datetime.datetime.now)
+ 
++    class Meta:
++        ordering = ["-pk"]
++
+ 
+ class Child(Parent):
+     name = models.CharField(max_length=10)

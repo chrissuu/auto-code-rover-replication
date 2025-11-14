@@ -1,0 +1,41 @@
+diff --git a/xarray/core/concat.py b/xarray/core/concat.py
+index ecae2566..4489d22f 100644
+--- a/xarray/core/concat.py
++++ b/xarray/core/concat.py
+@@ -312,15 +312,14 @@ def _dataset_concat(
+         to_merge = {var: [] for var in variables_to_merge}
+ 
+         for ds in datasets:
+-            absent_merge_vars = variables_to_merge - set(ds.variables)
+-            if absent_merge_vars:
+-                raise ValueError(
+-                    "variables %r are present in some datasets but not others. "
+-                    % absent_merge_vars
+-                )
+-
+             for var in variables_to_merge:
+-                to_merge[var].append(ds.variables[var])
++                if var in ds.variables:
++                    to_merge[var].append(ds.variables[var])
++                else:
++                    # Fill missing variables with NaN
++                    var_shape = tuple(dims_sizes.get(d, 1) for d in ds.dims)
++                    fill_var = Variable(var_shape, fill_value)
++                    to_merge[var].append(fill_var)
+ 
+         for var in variables_to_merge:
+             result_vars[var] = unique_variable(
+@@ -358,10 +357,9 @@ def _dataset_concat(
+     # n.b. this loop preserves variable order, needed for groupby.
+     for k in datasets[0].variables:
+         if k in concat_over:
+-            try:
+-                vars = ensure_common_dims([ds.variables[k] for ds in datasets])
+-            except KeyError:
+-                raise ValueError("%r is not present in all datasets." % k)
++            vars = ensure_common_dims(
++                [ds.variables.get(k, Variable((), fill_value)) for ds in datasets]
++            )
+             combined = concat_vars(vars, dim, positions)
+             assert isinstance(combined, Variable)
+             result_vars[k] = combined

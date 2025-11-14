@@ -1,0 +1,57 @@
+2025-11-13 06:26:51,210 - INFO - Creating container for sympy__sympy-21627...
+2025-11-13 06:26:52,751 - INFO - Container for sympy__sympy-21627 created: 7efdf47bf45ce619f2eca31eb0dd0f478db277435b5718fe459eb3c598692629
+2025-11-13 06:26:52,909 - INFO - Container for sympy__sympy-21627 started: 7efdf47bf45ce619f2eca31eb0dd0f478db277435b5718fe459eb3c598692629
+2025-11-13 06:26:52,910 - INFO - Intermediate patch for sympy__sympy-21627 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-21627/patch.diff, now applying to container...
+2025-11-13 06:26:53,026 - INFO - >>>>> Applied Patch:
+Checking patch sympy/core/exprtools.py...
+Applied patch sympy/core/exprtools.py cleanly.
+
+2025-11-13 06:26:53,517 - INFO - Git diff before:
+diff --git a/sympy/core/exprtools.py b/sympy/core/exprtools.py
+index 459d896724..553695ecc9 100644
+--- a/sympy/core/exprtools.py
++++ b/sympy/core/exprtools.py
+@@ -420,7 +420,12 @@ def is_zero(self):  # Factors
+         True
+         """
+         f = self.factors
+-        return len(f) == 1 and S.Zero in f
++        if len(f) == 1 and S.Zero in f:
++            return True
++        # Additional check to avoid recursion error for complex expressions
++        if any(isinstance(factor, cosh) for factor in f):
++            return False
++        return False
+ 
+     @property
+     def is_one(self):  # Factors
+2025-11-13 06:26:53,517 - INFO - Eval script for sympy__sympy-21627 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-21627/eval.sh; copying to container...
+2025-11-13 06:26:59,343 - INFO - Test runtime: 5.77 seconds
+2025-11-13 06:26:59,343 - INFO - Test output for sympy__sympy-21627 written to logs/run_evaluation/acr_eval/gpt-4o-2024-05-13/sympy__sympy-21627/test_output.txt
+2025-11-13 06:26:59,403 - INFO - Git diff after:
+diff --git a/sympy/core/exprtools.py b/sympy/core/exprtools.py
+index 459d896724..553695ecc9 100644
+--- a/sympy/core/exprtools.py
++++ b/sympy/core/exprtools.py
+@@ -420,7 +420,12 @@ def is_zero(self):  # Factors
+         True
+         """
+         f = self.factors
+-        return len(f) == 1 and S.Zero in f
++        if len(f) == 1 and S.Zero in f:
++            return True
++        # Additional check to avoid recursion error for complex expressions
++        if any(isinstance(factor, cosh) for factor in f):
++            return False
++        return False
+ 
+     @property
+     def is_one(self):  # Factors
+2025-11-13 06:26:59,403 - INFO - Grading answer for sympy__sympy-21627...
+2025-11-13 06:26:59,407 - INFO - report: {'sympy__sympy-21627': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_Abs']}, 'PASS_TO_PASS': {'success': ['test_as_real_imag', 'test_Abs_rewrite', 'test_Abs_real', 'test_Abs_properties', 'test_abs', 'test_adjoint', 'test_conjugate', 'test_conjugate_transpose', 'test_transpose', 'test_issue_4035', 'test_issue_3206', 'test_issue_4754_derivative_conjugate', 'test_derivatives_issue_4757', 'test_issue_11413', 'test_issue_14216', 'test_issue_14238', 'test_zero_assumptions'], 'failure': ['test_re', 'test_im', 'test_sign', 'test_arg', 'test_arg_rewrite', 'test_polarify', 'test_unpolarify', 'test_periodic_argument', 'test_principal_branch']}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-21627: resolved: False
+2025-11-13 06:26:59,407 - INFO - Attempting to stop container sweb.eval.sympy__sympy-21627.acr_eval...
+2025-11-13 06:27:14,638 - INFO - Attempting to remove container sweb.eval.sympy__sympy-21627.acr_eval...
+2025-11-13 06:27:14,680 - INFO - Container sweb.eval.sympy__sympy-21627.acr_eval removed.
+2025-11-13 06:27:14,681 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-21627:latest...
+2025-11-13 06:27:14,776 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-21627:latest removed.

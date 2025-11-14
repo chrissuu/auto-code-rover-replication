@@ -1,0 +1,17 @@
+diff --git a/sympy/core/symbol.py b/sympy/core/symbol.py
+index 70e6953559..b037969d04 100644
+--- a/sympy/core/symbol.py
++++ b/sympy/core/symbol.py
+@@ -347,6 +347,12 @@ def free_symbols(self):
+     def as_set(self):
+         return S.UniversalSet
+ 
++    # Ensure that __dict__ is not created
++    def __setattr__(self, key, value):
++        if not hasattr(self, '__slots__'):
++            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{key}'")
++        super(Symbol, self).__setattr__(key, value)
++
+ 
+ class Dummy(Symbol):
+     """Dummy symbols are each unique, even if they have the same name:

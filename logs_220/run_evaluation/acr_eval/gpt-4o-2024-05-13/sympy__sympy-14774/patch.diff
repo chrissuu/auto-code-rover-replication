@@ -1,0 +1,30 @@
+diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py
+index a3ead157c1..ace76fad5b 100644
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -740,9 +740,24 @@ def _print_Function(self, expr, exp=None):
+                 len(args) == 1 and \
+                 not self._needs_function_brackets(expr.args[0])
+ 
+-            inv_trig_table = ["asin", "acos", "atan", "acot"]
++            inv_trig_table = ["asin", "acos", "atan", "acot", "acsc", "asec"]
+ 
+             # If the function is an inverse trig function, handle the style
++            if func in inv_trig_table:
++                if inv_trig_style == "abbreviated":
++                    func = func
++                elif inv_trig_style == "full":
++                    if func.startswith("a"):
++                        func = "arc" + func[1:]
++                    else:
++                        func = "arc" + func
++                elif inv_trig_style == "power":
++                    func = func[1:]
++                    inv_trig_power_case = True
++
++                    # Can never fold brackets if we're raised to a power
++                    if exp is not None:
++                        can_fold_brackets = False
+             if func in inv_trig_table:
+                 if inv_trig_style == "abbreviated":
+                     func = func

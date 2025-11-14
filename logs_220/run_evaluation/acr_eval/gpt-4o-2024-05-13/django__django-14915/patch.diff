@@ -1,0 +1,25 @@
+diff --git a/django/forms/widgets.py b/django/forms/widgets.py
+index 00c19e2c55..de3813628e 100644
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -625,7 +625,7 @@ class ChoiceWidget(Widget):
+             option_attrs.update(self.checked_attribute)
+         if 'id' in option_attrs:
+             option_attrs['id'] = self.id_for_label(option_attrs['id'], index)
+-        return {
++        option = {
+             'name': name,
+             'value': value,
+             'label': label,
+@@ -636,6 +636,11 @@ class ChoiceWidget(Widget):
+             'template_name': self.option_template_name,
+             'wrap_label': True,
+         }
++        if value:
++            value_key = str(value)  # Convert value to string to ensure it's hashable
++            if value_key in self.show_fields:  # This is a dict {1: ['first_name', 'last_name']}
++                option['attrs']['data-fields'] = json.dumps(self.show_fields[value_key])
++        return option
+ 
+     def get_context(self, name, value, attrs):
+         context = super().get_context(name, value, attrs)

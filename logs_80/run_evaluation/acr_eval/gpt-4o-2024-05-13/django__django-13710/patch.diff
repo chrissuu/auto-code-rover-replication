@@ -1,0 +1,24 @@
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+index dadd4acfa1..467cf441c9 100644
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -2040,7 +2040,7 @@ class InlineModelAdmin(BaseModelAdmin):
+         if self.verbose_name is None:
+             self.verbose_name = self.model._meta.verbose_name
+         if self.verbose_name_plural is None:
+-            self.verbose_name_plural = self.model._meta.verbose_name_plural
++            self.verbose_name_plural = f"{self.verbose_name}s" if self.verbose_name else self.model._meta.verbose_name_plural
+ 
+     @property
+     def media(self):
+@@ -2095,6 +2095,10 @@ class InlineModelAdmin(BaseModelAdmin):
+             **kwargs,
+         }
+ 
++        # Set verbose_name_plural based on verbose_name if specified
++        if 'verbose_name_plural' not in defaults and hasattr(self, 'verbose_name') and self.verbose_name:
++            defaults['verbose_name_plural'] = f"{self.verbose_name}s"
++
+         base_model_form = defaults['form']
+         can_change = self.has_change_permission(request, obj) if request else True
+         can_add = self.has_add_permission(request, obj) if request else True

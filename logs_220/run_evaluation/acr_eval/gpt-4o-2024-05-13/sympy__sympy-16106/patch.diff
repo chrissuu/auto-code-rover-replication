@@ -1,0 +1,34 @@
+diff --git a/sympy/printing/mathml.py b/sympy/printing/mathml.py
+index 1aa0ee01a2..7f358d30d7 100644
+--- a/sympy/printing/mathml.py
++++ b/sympy/printing/mathml.py
+@@ -449,6 +449,14 @@ def _print_Basic(self, e):
+             x.appendChild(self._print(arg))
+         return x
+ 
++    def _print_Indexed(self, e):
++        x = self.dom.createElement('msub')
++        base = self._print(e.base)
++        x.appendChild(base)
++        for index in e.indices:
++            x.appendChild(self._print(index))
++        return x
++
+     def _print_AssocOp(self, e):
+         x = self.dom.createElement('apply')
+         x_1 = self.dom.createElement(self.mathml_tag(e))
+@@ -1017,6 +1025,14 @@ def _print_Basic(self, e):
+         mrow.appendChild(brac)
+         return mrow
+ 
++    def _print_Indexed(self, e):
++        msub = self.dom.createElement('msub')
++        base = self._print(e.base)
++        msub.appendChild(base)
++        for index in e.indices:
++            msub.appendChild(self._print(index))
++        return msub
++
+     def _print_Tuple(self, e):
+         mrow = self.dom.createElement('mrow')
+         x = self.dom.createElement('mfenced')

@@ -1,0 +1,27 @@
+diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py
+index 38da1e6ecc..46aaf0103e 100644
+--- a/django/db/migrations/serializer.py
++++ b/django/db/migrations/serializer.py
+@@ -123,10 +123,21 @@ class DictionarySerializer(BaseSerializer):
+ 
+ class EnumSerializer(BaseSerializer):
+     def serialize(self):
++        import enum
+         enum_class = self.value.__class__
+         module = enum_class.__module__
++        
++        try:
++            # Try to get the name of the enum value
++            name = self.value.name
++            value_str = "%s.%s[%r]" % (module, enum_class.__qualname__, name)
++        except AttributeError:
++            # If there is no single name, decompose the value
++            names = [e.name for e in enum._decompose(enum_class, self.value)[0]]
++            value_str = " | ".join("%s.%s[%r]" % (module, enum_class.__qualname__, name) for name in names)
++        
+         return (
+-            "%s.%s[%r]" % (module, enum_class.__qualname__, self.value.name),
++            value_str,
+             {"import %s" % module},
+         )
+ 

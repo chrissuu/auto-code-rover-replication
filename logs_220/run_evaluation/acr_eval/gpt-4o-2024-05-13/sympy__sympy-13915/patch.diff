@@ -1,0 +1,24 @@
+diff --git a/sympy/core/basic.py b/sympy/core/basic.py
+index d4ca323e0d..3390690c08 100644
+--- a/sympy/core/basic.py
++++ b/sympy/core/basic.py
+@@ -913,14 +913,17 @@ def subs(self, *args, **kwargs):
+                     break
+                 reps[d] = new
+             reps[m] = S.One  # get rid of m
+-            return rv.xreplace(reps)
++            rv = rv.xreplace(reps)
+         else:
+             rv = self
+             for old, new in sequence:
+                 rv = rv._subs(old, new, **kwargs)
+                 if not isinstance(rv, Basic):
+                     break
+-            return rv
++        # Check if the resulting expression is undefined
++        if rv.is_nan:
++            return S.NaN
++        return rv
+ 
+     @cacheit
+     def _subs(self, old, new, **hints):

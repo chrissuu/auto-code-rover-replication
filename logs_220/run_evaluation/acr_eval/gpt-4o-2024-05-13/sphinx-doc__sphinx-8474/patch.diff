@@ -1,0 +1,23 @@
+diff --git a/sphinx/domains/std.py b/sphinx/domains/std.py
+index 4bde57930..c915d3074 100644
+--- a/sphinx/domains/std.py
++++ b/sphinx/domains/std.py
+@@ -852,9 +852,15 @@ class StandardDomain(Domain):
+             if fignumber is None:
+                 return contnode
+         except ValueError:
+-            logger.warning(__("no number is assigned for %s: %s"), figtype, labelid,
+-                           location=node)
+-            return contnode
++            # Ensure tables are included in the `toc_fignumbers`
++            if figtype == 'table':
++                env.toc_fignumbers.setdefault(docname, {}).setdefault(figtype, {})
++                env.toc_fignumbers[docname][figtype][labelid] = (1,)
++                fignumber = (1,)
++            else:
++                logger.warning(__("no number is assigned for %s: %s"), figtype, labelid,
++                               location=node)
++                return contnode
+ 
+         try:
+             if node['refexplicit']:

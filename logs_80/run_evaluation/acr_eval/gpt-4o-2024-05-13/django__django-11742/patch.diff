@@ -1,0 +1,34 @@
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index 9ce46e3f73..ad0c4f69bf 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -257,6 +257,8 @@ class Field(RegisterLookupMixin):
+                 )
+             ]
+ 
++        max_choice_length = 0
++
+         # Expect [group_name, [value, display]]
+         for choices_group in self.choices:
+             try:
+@@ -276,10 +278,20 @@ class Field(RegisterLookupMixin):
+                 if not is_value(value) or not is_value(human_name):
+                     break
+ 
++                max_choice_length = max(max_choice_length, len(value))
++
+             # Special case: choices=['ab']
+             if isinstance(choices_group, str):
+                 break
+         else:
++            if self.max_length is not None and max_choice_length > self.max_length:
++                return [
++                    checks.Error(
++                        "'max_length' is too small to fit the longest value in 'choices'.",
++                        obj=self,
++                        id='fields.E122',
++                    )
++                ]
+             return []
+ 
+         return [
